@@ -261,7 +261,7 @@ footer a:hover{color:var(--accent)}
     W=cv.clientWidth; H=cv.clientHeight;
     cv.width=W*dpr; cv.height=H*dpr; cx.setTransform(dpr,0,0,dpr,0,0);
     nodes=[];edges=[];pulses=[];
-    var mob=W<720, s=mob?38:54, x0=mob?W*0.08:Math.max(W*0.57,finTexto()+s/2+24+48), x1=W+s, cols=mob?4:Math.max(4,Math.round((x1-x0)/165));
+    var mob=W<720, s=mob?38:54, x0=mob?W*0.08:Math.max(W*0.52,finTexto()+s/2+24+12), x1=W+s, cols=mob?4:Math.max(4,Math.round((x1-x0)/165));
     var byCol=[];
     for(var c=0;c<cols;c++){
       var n=c===0?(mob?2:3):Math.floor(rnd(mob?2:3,mob?3.99:5.99)), arr=[];
