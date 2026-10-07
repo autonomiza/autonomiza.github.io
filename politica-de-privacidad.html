@@ -3,16 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Autonomiza · Automatización para pymes</title>
-<meta name="description" content="Que tu empresa sea autónoma. Y tú, libre. Automatizo las tareas repetitivas de tu negocio conectando los programas que ya usas.">
-<link rel="canonical" href="https://autonomiza.es/">
+<title>Política de privacidad · Autonomiza</title>
+<meta name="description" content="Política de privacidad de Autonomiza: quién trata tus datos, para qué, cuánto tiempo se conservan y cómo ejercer tus derechos.">
+<link rel="canonical" href="https://autonomiza.es/politica-de-privacidad">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Autonomiza">
 <meta property="og:locale" content="es_ES">
-<meta property="og:url" content="https://autonomiza.es/">
-<meta property="og:title" content="Autonomiza · Que tu empresa sea autónoma. Y tú, libre.">
-<meta property="og:description" content="Automatizo las tareas repetitivas de tu negocio conectando los programas que ya usas.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Autonomiza","slogan":"Que tu empresa sea autónoma. Y tú, libre.","url":"https://autonomiza.es/","email":"hola@autonomiza.es","telephone":"+34745041754","founder":{"@type":"Person","name":"Iván Rodríguez Ruiz"},"address":{"@type":"PostalAddress","addressLocality":"Miranda de Ebro","addressRegion":"Burgos","addressCountry":"ES"},"areaServed":"ES","sameAs":["https://www.linkedin.com/company/autonomiza-es","https://www.instagram.com/autonomiza.es/"]}</script>
+<meta property="og:url" content="https://autonomiza.es/politica-de-privacidad">
+<meta property="og:title" content="Política de privacidad · Autonomiza">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -37,7 +35,6 @@
   --rule:#33333A; --node:#232327; --edge:#45454F; --glow:46,196,182;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0; background:var(--bg); color:var(--text);
   font-family:"PoppinsA",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -47,7 +44,6 @@ a{color:inherit}
 .in{max-width:72rem; margin:0 auto; padding:0 clamp(1.25rem,5vw,3rem)}
 
 /* Cabecera */
-.top{position:absolute; inset:0 0 auto 0; z-index:3; padding-top:env(safe-area-inset-top,0px)}
 .top .in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:5rem}
 .top .logo{width:9.5rem}
 .top a.m{font-size:.9375rem; color:var(--muted); text-decoration:none}
@@ -55,119 +51,42 @@ a{color:inherit}
 .logo{display:block; height:auto}
 .logo .lt{fill:var(--text)} .logo .ac{fill:var(--accent)}
 
-/* Portada con el flujo animado de fondo */
-.hero{position:relative; min-height:100vh; min-height:100svh; display:flex; align-items:center; overflow:hidden; isolation:isolate}
-#flujo{background-image:radial-gradient(var(--edge) 1px, transparent 1.4px); background-size:28px 28px; position:absolute; inset:0; width:100%; height:100%; z-index:-2}
-.hero::after{
-  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
-  background:
-    linear-gradient(90deg, var(--bg) 0%, var(--bg) 40%, transparent 66%),
-    linear-gradient(0deg, var(--bg) 0%, transparent 22%);
-}
-.hero .in{width:100%; padding-top:6rem; padding-bottom:5rem}
-h1{
-  font-weight:500; margin:0; max-width:10.5em;
+/* Política de privacidad */
+.doc{padding:clamp(3rem,8vw,5.5rem) 0 clamp(4rem,9vw,7rem)}
+.doc h1{
+  font-weight:500; margin:0;
   font-size:clamp(2.4rem,6.2vw,4.6rem); line-height:1.06; letter-spacing:-.03em;
+  text-transform:lowercase;
 }
-.sub{margin:1.6rem 0 0; max-width:28em; color:var(--muted); font-size:clamp(1.05rem,1.6vw,1.2rem)}
-.cta{display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.5rem; margin-top:2.4rem}
-.btn{
-  display:inline-flex; align-items:center; gap:.6rem;
-  background:var(--accent); color:#0F1A24; font-weight:500; text-decoration:none;
-  padding:.95rem 1.5rem; border-radius:.6rem; font-size:1.0625rem;
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-:root[data-theme="light"] .btn{color:#fff}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .btn{color:#fff} }
-.btn:hover{transform:translateY(-1px); box-shadow:0 8px 24px -8px rgba(var(--glow),.7)}
-.btn:focus-visible,.top a.m:focus-visible,.mail:focus-visible{outline:3px solid var(--accent); outline-offset:4px}
-.nota{color:var(--muted); font-size:.9375rem; max-width:22em; line-height:1.45}
+.doc h1::first-letter{text-transform:uppercase}
+.fecha{margin:1.4rem 0 clamp(3rem,7vw,5rem); color:var(--muted); font-size:.9375rem}
+.ap{display:grid; grid-template-columns:minmax(0,17rem) minmax(0,40rem); gap:1rem 4rem; padding:2.5rem 0; border-top:1px solid var(--rule)}
+.ap h2{margin:0; font-weight:500; font-size:.9375rem; line-height:1.5; letter-spacing:.06em; padding-top:.15rem}
+.ap h2 .n{color:var(--accent); margin-right:.3em}
+.ap p{margin:0 0 1rem; color:var(--muted)}
+.ap .cuerpo>:last-child{margin-bottom:0}
+.lista{list-style:none; margin:0 0 1rem; padding:0}
+.lista li{position:relative; padding-left:1.15rem; margin:0 0 .5rem; color:var(--muted)}
+.lista li:last-child{margin-bottom:0}
+.lista li::before{content:""; position:absolute; left:0; top:.7em; width:.34rem; height:.34rem; border-radius:50%; background:var(--accent)}
+.lb{color:var(--text); font-weight:500}
+.ap p.letra{display:grid; grid-template-columns:1.75rem 1fr}
+.letra .mk{color:var(--accent); font-weight:500}
+.ap a{color:var(--text); text-decoration-color:var(--accent); text-underline-offset:.2em; overflow-wrap:anywhere}
+.ap a:hover{color:var(--accent)}
 
-/* Secciones */
-section.s{padding:clamp(4rem,9vw,7rem) 0; border-top:1px solid var(--rule)}
-h2{font-weight:500; font-size:clamp(1.6rem,3.4vw,2.4rem); line-height:1.15; letter-spacing:-.02em; margin:0 0 2.75rem; max-width:18em}
-.ejemplos{display:grid; grid-template-columns:repeat(auto-fit,minmax(16rem,1fr)); gap:2.5rem 3rem; margin:0; padding:0; list-style:none}
-.ejemplos h3{font-weight:500; font-size:1.2rem; margin:0 0 .5rem; display:flex; align-items:baseline; gap:.15em}
-.ejemplos h3::before{content:"."; color:var(--accent); font-size:1.6em; line-height:0}
-.ejemplos p{margin:0; color:var(--muted)}
-
-.pasos{margin:0; padding:0; list-style:none; counter-reset:p; display:grid; gap:0}
-.pasos li{counter-increment:p; display:grid; grid-template-columns:3.5rem 1fr; gap:0 1rem; padding:1.6rem 0; border-top:1px solid var(--rule)}
-.pasos li:last-child{border-bottom:1px solid var(--rule)}
-.pasos li::before{content:counter(p); font-weight:500; font-size:1.6rem; line-height:1.2; color:var(--accent)}
-.pasos strong{display:block; font-weight:500; font-size:1.2rem; margin-bottom:.25rem}
-.pasos span{color:var(--muted)}
-
-.final{text-align:left}
-.final p{color:var(--muted); margin:0 0 .5rem}
-.mail{
-  display:inline-block; font-weight:500; text-decoration:none;
-  font-size:clamp(1.6rem,5vw,3.2rem); letter-spacing:-.02em; line-height:1.2;
-  border-bottom:3px solid var(--accent); overflow-wrap:anywhere;
-}
-.mail:hover{color:var(--accent)}
 footer{border-top:1px solid var(--rule); padding:2rem 0 2.5rem; color:var(--muted); font-size:.875rem}
 footer .in{display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem 2rem}
-
-/* Quién está detrás */
-.k{color:var(--accent); font-weight:500; font-size:.9375rem; letter-spacing:.08em; text-transform:uppercase; margin:0 0 1.2rem}
-.quien h2{max-width:20em; margin-bottom:0}
-.ruta{list-style:none; margin:3.5rem 0 0; padding:0; display:grid; grid-template-columns:repeat(3,1fr); gap:2.5rem}
-.ruta li{position:relative; padding-top:2.4rem}
-.ruta li::before{content:""; position:absolute; top:0; left:0; width:12px; height:12px; border-radius:50%; border:2px solid var(--accent); background:var(--bg); z-index:1}
-.ruta li::after{content:""; position:absolute; top:7px; left:24px; right:-2.1rem; height:2px;
-  background:linear-gradient(90deg, var(--rule) 0%, var(--rule) 42%, var(--accent) 50%, var(--rule) 58%, var(--rule) 100%);
-  background-size:300% 100%; animation:pulso 3.4s linear infinite}
-.ruta li:nth-child(2)::after{animation-delay:1.7s}
-.ruta li:last-child::after{display:none}
-.ruta li.now::before{background:var(--accent); box-shadow:0 0 0 7px rgba(var(--glow),.18)}
-.ruta .et{display:block; color:var(--muted); font-size:.8125rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.5rem}
-.ruta strong{display:block; font-weight:500; font-size:1.2rem; line-height:1.3; margin-bottom:.4rem}
-.ruta span.d{color:var(--muted)}
-.quien .yo{margin:3.5rem 0 0; color:var(--muted)}
-
-@keyframes pulso{from{background-position:100% 0}to{background-position:0% 0}}
-@media (prefers-reduced-motion: reduce){.ruta li::after{animation:none; background:var(--rule)}}
-@media (max-width:720px){
-  .ruta{grid-template-columns:1fr; gap:2.2rem}
-  .ruta li{padding:0 0 0 2.4rem}
-  .ruta li::before{top:.35rem}
-  .ruta li::after{top:calc(.35rem + 18px); left:7px; right:auto; bottom:-2.2rem; width:2px; height:auto; animation:none; background:var(--rule)}
-}
-
-@media (max-width:720px){
-  .hero::after{background:linear-gradient(0deg, var(--bg) 8%, rgba(0,0,0,0) 100%), linear-gradient(90deg, var(--bg) 0%, transparent 100%)}
-  .hero{align-items:flex-end}
-  .top a.m{display:none}
-}
-
-/* Añadidos de la fusión */
-h1 .ac{color:var(--accent)}
-.btn svg{width:1.25rem; height:1.25rem; flex:none}
-.nota{margin:0}
-.nota a{color:var(--text); text-decoration-color:var(--accent); text-underline-offset:.2em}
-.nota a:hover{color:var(--accent)}
-.tareas{display:grid; grid-template-columns:repeat(auto-fit,minmax(16rem,1fr)); gap:1.25rem; margin:0; padding:0; list-style:none}
-.tareas li{background:var(--surface); border:1px solid var(--rule); border-radius:.9rem; padding:1.6rem 1.5rem 1.7rem}
-.tareas h3{font-weight:500; font-size:1.15rem; line-height:1.35; margin:0 0 1rem}
-.tareas p{margin:0; color:var(--muted)}
-.tareas .ya{display:block; color:var(--accent); font-weight:500; font-size:.8125rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:.35rem}
-.otra{margin:2.25rem 0 0; color:var(--muted); max-width:36em}
-.otra a{color:var(--text); text-decoration-color:var(--accent); text-underline-offset:.2em}
-.otra a:hover{color:var(--accent)}
-.correo{display:flex; flex-wrap:wrap; align-items:center; gap:.75rem 1.25rem}
-.copiar{font:inherit; font-size:.875rem; color:var(--muted); background:none; cursor:pointer; border:1px solid var(--rule); border-radius:99px; padding:.35rem .9rem; line-height:1.4; transition:color .15s ease, border-color .15s ease}
-.copiar:hover,.copiar[data-ok]{color:var(--accent); border-color:var(--accent)}
-.canales{display:flex; flex-wrap:wrap; gap:.75rem 2.25rem; margin:2.5rem 0 0; padding:0; list-style:none}
-.canales a{display:inline-flex; align-items:center; gap:.55rem; text-decoration:none; color:var(--text)}
-.canales a:hover{color:var(--accent)}
-.canales svg{width:1.15rem; height:1.15rem; color:var(--accent); flex:none}
-.canales small{color:var(--muted); font-size:.875rem}
 footer nav{display:flex; flex-wrap:wrap; gap:.5rem 1.5rem}
 footer a{text-decoration:none}
 footer a:hover{color:var(--accent)}
+footer a[aria-current="page"]{color:var(--text)}
 :focus-visible{outline:3px solid var(--accent); outline-offset:4px; border-radius:.2rem}
-@media (prefers-reduced-motion: reduce){ .copiar{transition:none} }
+
+@media (max-width:720px){
+  .top a.m{display:none}
+  .ap{grid-template-columns:minmax(0,1fr); gap:1rem; padding:2rem 0}
+}
 </style>
 </head>
 <body>
@@ -188,156 +107,87 @@ footer a:hover{color:var(--accent)}
   <a class="m" href="mailto:hola@autonomiza.es">hola@autonomiza.es</a>
 </div></header>
 
-<main>
-<section class="hero">
-  <canvas id="flujo" aria-hidden="true"></canvas>
-  <div class="in">
-    <h1>Que tu empresa<br> sea autónoma.<br> <span class="ac">Y tú, libre.</span></h1>
-    <p class="sub">Automatizo las tareas repetitivas de tu negocio conectando los programas que ya usas. Recordatorios, pedidos, facturas, avisos: hechos solos, a su hora. Y si algo se sale de lo normal, te enteras antes de que sea un problema.</p>
-    <div class="cta">
-      <a class="btn" href="https://wa.me/34745041754?text=Hola%20Iv%C3%A1n%2C%20vengo%20de%20autonomiza.es%20y%20me%20gustar%C3%ADa%20automatizar%20una%20tarea%20de%20mi%20negocio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 20.5l1.6-4.6A8.4 8.4 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>Escríbeme por WhatsApp</a>
-      <p class="nota">Primera conversación de 15 minutos, sin compromiso. Si lo prefieres, escríbeme a <a href="mailto:hola@autonomiza.es?subject=Quiero%20automatizar%20una%20tarea">hola@autonomiza.es</a>.</p>
+<main class="doc"><div class="in">
+  <h1>POLÍTICA DE PRIVACIDAD</h1>
+  <p class="fecha">Última actualización: <time datetime="2026-10-07">7 de octubre de 2026</time></p>
+
+  <section class="ap" aria-labelledby="ap1">
+    <h2 id="ap1"><span class="n">1.</span> RESPONSABLE DEL TRATAMIENTO</h2>
+    <div class="cuerpo">
+      <p>El responsable del tratamiento de los datos personales recabados a través de este sitio web es:</p>
+      <ul class="lista">
+        <li><span class="lb">Titular:</span> Iván Rodríguez Ruiz, que opera bajo el nombre comercial «Autonomiza».</li>
+        <li><span class="lb">NIF:</span> 71341857C</li>
+        <li><span class="lb">Domicilio:</span> Calle Colón 27, 2.º A, 09200 Miranda de Ebro (Burgos).</li>
+        <li><span class="lb">Correo electrónico de contacto:</span> <a href="mailto:hola@autonomiza.es">hola@autonomiza.es</a></li>
+        <li><span class="lb">Sitio web:</span> <a href="https://autonomiza.es/">https://autonomiza.es</a></li>
+      </ul>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="s"><div class="in">
-  <h2>Tareas que no deberías seguir haciendo a mano</h2>
-  <ul class="tareas">
-    <li><h3>Llamar uno a uno para recordar las citas</h3><p><span class="ya">Automatizado</span>Cada cliente recibe su recordatorio por WhatsApp el día antes. Si alguien cancela, lo sabes a tiempo de llenar el hueco.</p></li>
-    <li><h3>Pasar los pedidos del correo a la hoja de cálculo</h3><p><span class="ya">Automatizado</span>Cada pedido que llega se anota solo en tu Excel o en tu programa de gestión. Sin teclearlo dos veces y sin que se pierda ninguno en la bandeja de entrada.</p></li>
-    <li><h3>Perseguir las facturas que no se han cobrado</h3><p><span class="ya">Automatizado</span>Las facturas vencidas se detectan solas y el recordatorio de pago sale a su hora, con buenas formas. Tú solo miras quién ha pagado.</p></li>
-  </ul>
-  <p class="otra">¿La tuya no está aquí? Es lo normal: cada negocio tiene la suya. <a href="https://wa.me/34745041754?text=Hola%20Iv%C3%A1n%2C%20vengo%20de%20autonomiza.es%20y%20me%20gustar%C3%ADa%20automatizar%20una%20tarea%20de%20mi%20negocio" target="_blank" rel="noopener">Cuéntamela</a> y te digo si se puede automatizar.</p>
-</div></section>
+  <section class="ap" aria-labelledby="ap2">
+    <h2 id="ap2"><span class="n">2.</span> QUÉ DATOS TRATAMOS Y CÓMO LOS OBTENEMOS</h2>
+    <div class="cuerpo">
+      <p>Solo tratamos los datos que nos facilitas voluntariamente al ponerte en contacto con nosotros. En concreto:</p>
+      <p class="letra"><span class="mk">a)</span> <span><span class="lb">Formulario de contacto del sitio web:</span> nombre, dirección de correo electrónico y cualquier dato que decidas incluir en el mensaje.</span></p>
+      <p class="letra"><span class="mk">b)</span> <span><span class="lb">WhatsApp Business:</span> si nos escribes al WhatsApp de Autonomiza, tratamos tu número de teléfono, tu nombre o perfil de WhatsApp y el contenido de los mensajes que nos envíes.</span></p>
+      <p>No recabamos datos especialmente protegidos a través de la web, ni elaboramos perfiles, ni tomamos decisiones automatizadas con tus datos.</p>
+    </div>
+  </section>
 
-<section class="s"><div class="in">
-  <h2>Cómo trabajo</h2>
-  <ol class="pasos">
-    <li><div><strong>Me cuentas qué te quita tiempo</strong><span>Quince minutos por videollamada o por WhatsApp, sin tecnicismos. Tú me explicas cómo trabajas hoy y yo te digo con sinceridad si merece la pena automatizarlo.</span></div></li>
-    <li><div><strong>Ves una demo funcionando</strong><span>Te enseño un ejemplo real que ya tengo montado, parecido a lo que necesitas. Así ves cómo funciona antes de decidir nada.</span></div></li>
-    <li><div><strong>Lo dejo en marcha y lo mantengo</strong><span>Con los programas que ya usas. Si algo cambia en tu negocio, se ajusta. Y si algo falla, salta un aviso.</span></div></li>
-  </ol>
-</div></section>
+  <section class="ap" aria-labelledby="ap3">
+    <h2 id="ap3"><span class="n">3.</span> PARA QUÉ USAMOS TUS DATOS (FINALIDAD)</h2>
+    <div class="cuerpo">
+      <p>Usamos tus datos únicamente para:</p>
+      <ul class="lista">
+        <li>Atender tu consulta, solicitud o petición de información.</li>
+        <li>Ponernos en contacto contigo para responderte y, en su caso, dar seguimiento comercial a la relación que tú mismo has iniciado.</li>
+        <li>Mantener la correspondencia derivada de esa relación.</li>
+      </ul>
+    </div>
+  </section>
 
-<section class="s quien"><div class="in">
-  <p class="k">Quién está detrás</p>
-  <h2>Aprendí a automatizar donde un fallo no tiene excusa.</h2>
-  <ol class="ruta">
-    <li><span class="et">Antes</span><strong>Almacenes logísticos de alta tecnología</strong><span class="d">Automatización y robótica donde los pedidos no esperan y las máquinas no pueden parar.</span></li>
-    <li><span class="et">Hoy</span><strong>Mantenimiento aeronáutico</strong><span class="d">Robótica en un sector donde nada se da por bueno sin comprobarlo.</span></li>
-    <li class="now"><span class="et">Para tu empresa</span><strong>Autonomiza</strong><span class="d">Ese mismo nivel de exigencia, aplicado a los procesos de tu pyme.</span></li>
-  </ol>
-  <p class="yo">Iván Rodríguez Ruiz · Técnico de automatización y robótica</p>
-</div></section>
+  <section class="ap" aria-labelledby="ap4">
+    <h2 id="ap4"><span class="n">4.</span> BASE LEGAL</h2>
+    <div class="cuerpo">
+      <p>La base que legitima el tratamiento es tu consentimiento, que prestas al enviarnos el formulario o al escribirnos por WhatsApp, y, en su caso, la aplicación de medidas precontractuales solicitadas por ti.</p>
+    </div>
+  </section>
 
-<section class="s final" id="contacto"><div class="in">
-  <p>Cuéntame qué tarea te quita tiempo. Te respondo personalmente:</p>
-  <div class="correo">
-    <a class="mail" href="mailto:hola@autonomiza.es?subject=Quiero%20automatizar%20una%20tarea">hola@autonomiza.es</a>
-    <button class="copiar" type="button" data-copiar="hola@autonomiza.es" aria-live="polite">Copiar</button>
-  </div>
-  <ul class="canales">
-    <li><a href="https://wa.me/34745041754?text=Hola%20Iv%C3%A1n%2C%20vengo%20de%20autonomiza.es%20y%20me%20gustar%C3%ADa%20automatizar%20una%20tarea%20de%20mi%20negocio" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 20.5l1.6-4.6A8.4 8.4 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>WhatsApp <small>745 04 17 54</small></a></li>
-    <li><a href="https://www.linkedin.com/company/autonomiza-es" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>LinkedIn</a></li>
-    <li><a href="https://www.instagram.com/autonomiza.es/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>Instagram</a></li>
-  </ul>
-</div></section>
-</main>
+  <section class="ap" aria-labelledby="ap5">
+    <h2 id="ap5"><span class="n">5.</span> DURANTE CUÁNTO TIEMPO CONSERVAMOS TUS DATOS</h2>
+    <div class="cuerpo">
+      <p>Conservaremos tus datos durante el tiempo necesario para atender tu solicitud y, si se inicia una relación comercial, mientras esta se mantenga. Después, se conservarán bloqueados durante los plazos legalmente exigibles para atender posibles responsabilidades, y se suprimirán una vez transcurridos.</p>
+    </div>
+  </section>
+
+  <section class="ap" aria-labelledby="ap6">
+    <h2 id="ap6"><span class="n">6.</span> A QUIÉN CEDEMOS TUS DATOS (DESTINATARIOS)</h2>
+    <div class="cuerpo">
+      <p>No cedemos tus datos a terceros, salvo obligación legal.</p>
+      <p>Para prestar el servicio utilizamos proveedores tecnológicos que actúan como encargados del tratamiento (por ejemplo, el proveedor del correo electrónico, el servicio de WhatsApp Business de Meta y el proveedor de alojamiento del sitio web). Algunos de estos proveedores pueden estar ubicados fuera del Espacio Económico Europeo; en tal caso, las transferencias internacionales se amparan en las garantías previstas por la normativa de protección de datos.</p>
+    </div>
+  </section>
+
+  <section class="ap" aria-labelledby="ap7">
+    <h2 id="ap7"><span class="n">7.</span> TUS DERECHOS</h2>
+    <div class="cuerpo">
+      <p>Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad de tus datos, escribiendo a <a href="mailto:hola@autonomiza.es">hola@autonomiza.es</a> e indicando el derecho que deseas ejercer. Para verificar tu identidad podremos solicitarte una copia de un documento identificativo.</p>
+      <p>Asimismo, si consideras que el tratamiento de tus datos no se ajusta a la normativa, tienes derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (<a href="https://www.aepd.es/" target="_blank" rel="noopener">www.aepd.es</a>).</p>
+    </div>
+  </section>
+
+  <section class="ap" aria-labelledby="ap8">
+    <h2 id="ap8"><span class="n">8.</span> CAMBIOS EN ESTA POLÍTICA</h2>
+    <div class="cuerpo">
+      <p>Esta política de privacidad puede actualizarse para adaptarse a cambios normativos o en nuestros servicios. La versión vigente será siempre la publicada en este sitio web, con su fecha de última actualización.</p>
+    </div>
+  </section>
+</div></main>
 
 <footer><div class="in">
   <span>Iván Rodríguez Ruiz · Miranda de Ebro</span>
-  <nav aria-label="Legal"><a href="/politica-de-privacidad">Política de privacidad</a></nav>
+  <nav aria-label="Legal"><a href="/politica-de-privacidad" aria-current="page">Política de privacidad</a></nav>
 </div></footer>
-
-<script>
-(function(){
-  var cv=document.getElementById('flujo'), cx=cv.getContext('2d');
-  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var W,H,dpr,nodes=[],edges=[],pulses=[],col={},last=0,spawnT=0;
-  function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
-  function readColors(){col={node:css('--node'),edge:css('--edge'),acc:css('--accent'),glow:css('--glow'),bg:css('--bg')}}
-  function rnd(a,b){return a+Math.random()*(b-a)}
-  function finTexto(){var m=0,hr=cv.getBoundingClientRect();document.querySelectorAll('.hero h1,.hero .sub,.hero .cta>*').forEach(function(el){var r=document.createRange();r.selectNodeContents(el);var b=r.getBoundingClientRect();if(b.width)m=Math.max(m,b.right-hr.left)});return m}
-  function build(){
-    dpr=Math.min(window.devicePixelRatio||1,2);
-    W=cv.clientWidth; H=cv.clientHeight;
-    cv.width=W*dpr; cv.height=H*dpr; cx.setTransform(dpr,0,0,dpr,0,0);
-    nodes=[];edges=[];pulses=[];
-    var mob=W<720, s=mob?38:54, x0=mob?W*0.08:Math.max(W*0.52,finTexto()+s/2+24+12), x1=W+s, cols=mob?4:Math.max(4,Math.round((x1-x0)/165));
-    var byCol=[];
-    for(var c=0;c<cols;c++){
-      var n=c===0?(mob?2:3):Math.floor(rnd(mob?2:3,mob?3.99:5.99)), arr=[];
-      for(var i=0;i<n;i++){
-        var y=(mob?H*0.1:H*0.1)+(i+0.5)*((mob?H*0.42:H*0.82)/n)+rnd(-22,22);
-        var x=x0+c*((x1-x0)/(cols-1||1))+rnd(-24,24);
-        var nd={x:x,y:y,s:s,lit:0,out:[]}; nodes.push(nd); arr.push(nd);
-      }
-      byCol.push(arr);
-    }
-    for(var c=0;c<cols-1;c++){
-      byCol[c].forEach(function(a){
-        var nx=byCol[c+1], k=Math.random()<0.45?2:1, picked={};
-        for(var j=0;j<k;j++){var b=nx[Math.floor(Math.random()*nx.length)]; if(picked[nodes.indexOf(b)])continue; picked[nodes.indexOf(b)]=1; var e={a:a,b:b}; edges.push(e); a.out.push(e);}
-      });
-      byCol[c+1].forEach(function(b){ if(!edges.some(function(e){return e.b===b})){var a=byCol[c][Math.floor(Math.random()*byCol[c].length)]; var e={a:a,b:b}; edges.push(e); a.out.push(e);} });
-    }
-    nodes.starts=byCol[0];
-  }
-  function pt(e,t){
-    var ax=e.a.x+e.a.s/2, ay=e.a.y, bx=e.b.x-e.b.s/2, by=e.b.y, dx=(bx-ax)*0.5, u=1-t;
-    return {x:u*u*u*ax+3*u*u*t*(ax+dx)+3*u*t*t*(bx-dx)+t*t*t*bx, y:u*u*u*ay+3*u*u*t*ay+3*u*t*t*by+t*t*t*by};
-  }
-  function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
-  function spawn(){var st=nodes.starts; var n=st[Math.floor(Math.random()*st.length)]; n.lit=1; if(n.out.length) pulses.push({e:n.out[Math.floor(Math.random()*n.out.length)],t:0,v:rnd(0.35,0.55)})}
-  function draw(dt){
-    cx.clearRect(0,0,W,H);
-    cx.lineWidth=1.5; cx.strokeStyle=col.edge;
-    edges.forEach(function(e){
-      var ax=e.a.x+e.a.s/2, bx=e.b.x-e.b.s/2, dx=(bx-ax)*0.5;
-      cx.beginPath(); cx.moveTo(ax,e.a.y); cx.bezierCurveTo(ax+dx,e.a.y,bx-dx,e.b.y,bx,e.b.y); cx.stroke();
-    });
-    pulses.forEach(function(p){var e=p.e, ax=e.a.x+e.a.s/2, bx=e.b.x-e.b.s/2, dx=(bx-ax)*0.5; cx.beginPath(); cx.moveTo(ax,e.a.y); cx.bezierCurveTo(ax+dx,e.a.y,bx-dx,e.b.y,bx,e.b.y); cx.strokeStyle='rgba('+col.glow+',0.28)'; cx.lineWidth=2; cx.stroke();});
-    for(var i=pulses.length-1;i>=0;i--){
-      var p=pulses[i]; p.t+=p.v*dt;
-      for(var k=0;k<9;k++){var tt=p.t-k*0.025; if(tt<0)break; var q=pt(p.e,Math.min(tt,1)); cx.beginPath(); cx.fillStyle='rgba('+col.glow+','+(0.9*(1-k/9))+')'; cx.arc(q.x,q.y,3.6-k*0.3,0,7); cx.fill();}
-      if(p.t>=1){var b=p.e.b; b.lit=1; pulses.splice(i,1); if(b.out.length) pulses.push({e:b.out[Math.floor(Math.random()*b.out.length)],t:0,v:rnd(0.35,0.55)});}
-    }
-    nodes.forEach(function(n){
-      var h=n.s, x=n.x-h/2, y=n.y-h/2;
-      if(n.lit>0){cx.save(); cx.shadowColor='rgba('+col.glow+','+(0.8*n.lit)+')'; cx.shadowBlur=32*n.lit;}
-      rr(x,y,h,h,h*0.22); cx.fillStyle=col.node; cx.fill();
-      cx.lineWidth=1.5; cx.strokeStyle=n.lit>0.02?'rgba('+col.glow+','+(0.35+0.65*n.lit)+')':col.edge; cx.stroke();
-      if(n.lit>0) cx.restore();
-      cx.fillStyle=n.lit>0.02?'rgba('+col.glow+','+(0.4+0.6*n.lit)+')':col.edge;
-      var w=h*0.42; rr(n.x-w/2,n.y-h*0.14,w,h*0.08,2); cx.fill(); rr(n.x-w/2,n.y+h*0.04,w*0.65,h*0.08,2); cx.fill();
-      n.lit=Math.max(0,n.lit-dt*0.9);
-    });
-  }
-  function loop(ts){
-    var dt=Math.min((ts-last)/1000,0.05); last=ts;
-    spawnT-=dt; if(spawnT<=0){spawn(); spawnT=rnd(0.5,1.1);}
-    draw(dt); raf=requestAnimationFrame(loop);
-  }
-  var raf;
-  function start(){readColors(); build(); cancelAnimationFrame(raf);
-    if(reduce){ nodes.starts.forEach(function(n){n.lit=0.6}); draw(0); return; }
-    last=performance.now(); spawn(); raf=requestAnimationFrame(loop);}
-  var to; window.addEventListener('resize',function(){clearTimeout(to); to=setTimeout(start,150)});
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){readColors(); if(reduce)draw(0)});
-  new MutationObserver(function(){readColors(); if(reduce)draw(0)}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
-  document.addEventListener('visibilitychange',function(){ if(document.hidden) cancelAnimationFrame(raf); else if(!reduce){last=performance.now(); raf=requestAnimationFrame(loop);} });
-  start();
-})();
-</script>
-<script>
-document.querySelectorAll('[data-copiar]').forEach(function(b){
-  b.addEventListener('click',function(){
-    var t=b.getAttribute('data-copiar');
-    function ok(){b.textContent='Copiado';b.setAttribute('data-ok','');setTimeout(function(){b.textContent='Copiar';b.removeAttribute('data-ok')},2000)}
-    try{ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,function(){})} }catch(e){}
-  });
-});
-</script>
 </body>
 </html>
