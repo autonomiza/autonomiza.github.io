@@ -110,7 +110,7 @@
 <footer><div class="wrap"><span>Autonomiza · Iván Rodríguez Ruiz · Miranda de Ebro</span><nav aria-label="Otros enlaces"><a href="https://www.linkedin.com/company/autonomiza-es" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autonomiza.es/" target="_blank" rel="noopener">Instagram</a><a href="/aviso-legal.html">Aviso legal</a><a href="/politica-de-privacidad.html">Privacidad</a></nav></div></footer>
 <script>
 (function(){
-var hero=document.querySelector('.sphere-hero'),button=document.querySelector('.motion-toggle'),sphere=hero.querySelector('.sphere-svg'),links=hero.querySelector('.capability-links'),caps=Array.from(hero.querySelectorAll('.capability')),ns='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:900px)'),visible=true,focused=true,frame=0;
+var hero=document.querySelector('.sphere-hero'),button=document.querySelector('.motion-toggle'),sphere=hero.querySelector('.sphere-svg'),links=hero.querySelector('.capability-links'),caps=Array.from(hero.querySelectorAll('.capability')),ns='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:900px)'),visible=true,frame=0;
 function el(tag,attrs,parent){var n=document.createElementNS(ns,tag);Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);});parent.appendChild(n);return n;}
 var pairs=caps.map(function(cap,i){var group=el('g',{'data-capability':cap.classList[1],mask:'url(#business-link-absorption)'},links),base=el('path',{class:'cap-connection'},group),glow=el('path',{class:'cap-spark cap-spark-glow',pathLength:1000,filter:'url(#link-glow)'},group),spark=el('path',{class:'cap-spark',pathLength:1000},group),dock=el('circle',{class:'cap-dock',r:2.5},group);[glow,spark].forEach(function(n){n.style.animationDuration='13s,28s';n.style.animationDelay=(-i*2.8)+'s';});return {cap:cap,paths:[base,glow,spark],dock:dock,index:i};});
 function draw(){
@@ -124,16 +124,14 @@ d+=' A '+(mesh[0]*Math.hypot(matrix.a,matrix.b))+' '+(mesh[1]*Math.hypot(matrix.
 pair.paths.forEach(function(path){path.setAttribute('d',d);});pair.dock.setAttribute('cx',tx);pair.dock.setAttribute('cy',ty);
 });
 }
-function active(){return visible&&focused&&!document.hidden&&!reduced.matches&&!hero.classList.contains('motion-paused');}
+function active(){return visible&&!reduced.matches&&!hero.classList.contains('motion-paused');}
 function tick(){frame=0;draw();if(active())frame=requestAnimationFrame(tick);}
-function refresh(){hero.classList.toggle('motion-idle',!visible||!focused||document.hidden);draw();if(active()&&!frame)frame=requestAnimationFrame(tick);else if(!active()&&frame){cancelAnimationFrame(frame);frame=0;}}
+function refresh(){draw();if(active()&&!frame)frame=requestAnimationFrame(tick);else if(!active()&&frame){cancelAnimationFrame(frame);frame=0;}}
 button.addEventListener('click',function(){var paused=hero.classList.toggle('motion-paused');button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Reanudar animación':'Pausar animación';refresh();});
 new ResizeObserver(refresh).observe(hero);
 new IntersectionObserver(function(entries){visible=entries[0].isIntersecting;refresh();}).observe(hero);
 reduced.addEventListener('change',refresh);mobile.addEventListener('change',refresh);
-document.addEventListener('visibilitychange',refresh);
-window.addEventListener('blur',function(){focused=false;refresh();});
-window.addEventListener('focus',function(){focused=true;refresh();});
+document.addEventListener('visibilitychange',function(){visible=!document.hidden;refresh();});
 if(document.fonts)document.fonts.ready.then(refresh);refresh();
 })();
 </script>
