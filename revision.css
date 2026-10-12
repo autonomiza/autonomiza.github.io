@@ -28,5 +28,8 @@ body{background-image:linear-gradient(90deg,#1c1c1e 0%,#1c1c1ecc 28%,#1c1c1e55 6
 
 
 /* El negocio pertenece al volumen de la esfera; la trama pasa por delante. */
-.business-core-svg text{fill:#e5fff9;font-family:inherit;font-size:34px;font-weight:500;letter-spacing:2px;text-anchor:middle;paint-order:stroke fill;stroke:#1c1c1e;stroke-opacity:.65;stroke-width:2;filter:drop-shadow(0 0 10px #2ec4b650)}
+.business-core-svg text{fill:#91ffee;opacity:.9;font-family:inherit;font-size:34px;font-weight:500;letter-spacing:2px;text-anchor:middle;filter:drop-shadow(0 0 4px #2ec4b6a0) drop-shadow(0 0 13px #2ec4b640)}
 @media(max-width:900px){.business-core-svg text{font-size:38px;letter-spacing:1.8px}}
+
+.sphere-front{transform-origin:1080px 445px;animation:sphere-turn 110s linear infinite;opacity:.8}.motion-paused .sphere-front{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.sphere-front{animation:none}}
