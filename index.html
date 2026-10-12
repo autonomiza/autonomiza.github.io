@@ -35,18 +35,15 @@
     <svg class="sphere-svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
       <defs><radialGradient id="sphere-light"><stop stop-color="#2ec4b6" stop-opacity=".16"/><stop offset="1" stop-color="#2ec4b6" stop-opacity="0"/></radialGradient><filter id="sphere-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4"/></filter></defs>
       <circle cx="1080" cy="445" r="520" fill="url(#sphere-light)"/>
-      <g class="ambient-web" fill="none" stroke="#2ec4b6" stroke-width=".8"><path d="M-100 740C130 450 430 840 730 470S1200 -160 1510 170"/><path d="M-100 110C180 410 380 -60 720 340S1200 890 1530 610"/><path d="M-100 490C240 750 520 170 950 130S1190 600 1520 840"/></g>
       <g class="sphere-grid" fill="none" stroke="#2ec4b6" stroke-width="1">
         <circle cx="1080" cy="445" r="280"/><ellipse cx="1080" cy="445" rx="280" ry="70"/><ellipse cx="1080" cy="445" rx="280" ry="150"/><ellipse cx="1080" cy="445" rx="280" ry="225"/>
         <ellipse cx="1080" cy="445" rx="68" ry="280"/><ellipse cx="1080" cy="445" rx="152" ry="280"/><ellipse cx="1080" cy="445" rx="226" ry="280"/><path d="M800 445h560 M1080 165v560"/>
       </g>
       <g class="orbit-rings" fill="none" stroke="#2ec4b6"><ellipse cx="1080" cy="445" rx="435" ry="160" transform="rotate(-25 1080 445)"/><ellipse cx="1080" cy="445" rx="375" ry="180" transform="rotate(35 1080 445)"/></g>
-      <g class="signal-routes" fill="none" stroke="#2ec4b6" stroke-width="1"><path d="M610 130C800 30 810 400 1080 445S1320 550 1500 350"/><path d="M680 730C690 450 1260 940 1080 445S1300 -20 1490 190"/><path d="M610 480C650 820 1120 30 1080 445S1210 880 1540 740"/></g>
-      <g class="flow-sparks" fill="none" stroke="#7bf8e6" stroke-width="2.4" stroke-linecap="round"><path pathLength="1000" d="M610 130C800 30 810 400 1080 445S1320 550 1500 350"/><path pathLength="1000" d="M680 730C690 450 1260 940 1080 445S1300 -20 1490 190"/><path pathLength="1000" d="M610 480C650 820 1120 30 1080 445S1210 880 1540 740"/></g>
-      <g class="flow-sparks glow-sparks" fill="none" stroke="#2ec4b6" stroke-width="8" filter="url(#sphere-glow)"><path pathLength="1000" d="M610 130C800 30 810 400 1080 445S1320 550 1500 350"/><path pathLength="1000" d="M680 730C690 450 1260 940 1080 445S1300 -20 1490 190"/><path pathLength="1000" d="M610 480C650 820 1120 30 1080 445S1210 880 1540 740"/></g>
       <g class="sphere-pulse" fill="#2ec4b6"><circle cx="800" cy="445" r="4"/><circle cx="1220" cy="259" r="4"/><circle cx="1329" cy="571" r="4"/><circle cx="1080" cy="725" r="4"/></g>
     </svg>
   </div>
+  <svg class="capability-links" aria-hidden="true"><defs><filter id="link-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3"/></filter></defs></svg>
   <div class="capability-field" role="img" aria-label="Posibilidades digitales conectadas a tu negocio: automatización, diseño web, agentes de IA, inteligencia artificial, aplicaciones a medida, integraciones, datos y paneles, gestión documental, asistentes de chat y atención al cliente.">
     <span class="capability cap-1" aria-hidden="true">Automatización</span><span class="capability cap-2" aria-hidden="true">Diseño web</span><span class="capability cap-3" aria-hidden="true">Agentes de IA</span><span class="capability cap-4" aria-hidden="true">Inteligencia artificial</span><span class="capability cap-5" aria-hidden="true">Aplicaciones a medida</span><span class="capability cap-6" aria-hidden="true">Integraciones</span><span class="capability cap-7" aria-hidden="true">Datos y paneles</span><span class="capability cap-8" aria-hidden="true">Gestión documental</span><span class="capability cap-9" aria-hidden="true">Asistentes de chat</span><span class="capability cap-10" aria-hidden="true">Atención al cliente</span>
     <span class="business-core" aria-hidden="true">Tu negocio</span>
@@ -112,6 +109,30 @@
 </main>
 <footer><div class="wrap"><span>Autonomiza · Iván Rodríguez Ruiz · Miranda de Ebro</span><nav aria-label="Otros enlaces"><a href="https://www.linkedin.com/company/autonomiza-es" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autonomiza.es/" target="_blank" rel="noopener">Instagram</a><a href="/aviso-legal.html">Aviso legal</a><a href="/politica-de-privacidad.html">Privacidad</a></nav></div></footer>
 <script>
-(function(){var b=document.querySelector('.motion-toggle'),h=document.querySelector('.sphere-hero');if(!b||!h)return;b.addEventListener('click',function(){var paused=h.classList.toggle('motion-paused');b.setAttribute('aria-pressed',String(paused));b.textContent=paused?'Reanudar animación':'Pausar animación';});})();
+(function(){
+var hero=document.querySelector('.sphere-hero'),button=document.querySelector('.motion-toggle'),sphere=hero.querySelector('.sphere-svg'),links=hero.querySelector('.capability-links'),caps=Array.from(hero.querySelectorAll('.capability')),ns='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:900px)'),visible=true,frame=0;
+function el(tag,attrs,parent){var n=document.createElementNS(ns,tag);Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);});parent.appendChild(n);return n;}
+var pairs=caps.map(function(cap,i){var group=el('g',{'data-capability':cap.classList[1]},links),base=el('path',{class:'cap-connection'},group),glow=el('path',{class:'cap-spark cap-spark-glow',pathLength:1000,filter:'url(#link-glow)'},group),spark=el('path',{class:'cap-spark',pathLength:1000},group),dock=el('circle',{class:'cap-dock',r:2.5},group);[glow,spark].forEach(function(n){n.style.animationDuration=(10+i*.9)+'s';n.style.animationDelay=(-i*1.8)+'s';});return {cap:cap,paths:[base,glow,spark],dock:dock,index:i};});
+function draw(){
+var viewBox=mobile.matches?'640 80 840 730':'0 0 1440 900';if(sphere.getAttribute('viewBox')!==viewBox)sphere.setAttribute('viewBox',viewBox);
+var rect=hero.getBoundingClientRect(),matrix=hero.querySelector(".sphere-grid").getScreenCTM();if(!matrix||!rect.width)return;
+links.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
+function point(x,y){var p=sphere.createSVGPoint();p.x=x;p.y=y;return p.matrixTransform(matrix);}
+var center=point(1080,445),angles=[-145,-65,-165,-15,178,30,125,70,145,-90];
+pairs.forEach(function(pair){var box=pair.cap.getBoundingClientRect(),angle=angles[pair.index]*Math.PI/180,mesh=[[280,150],[152,280],[280,225],[226,280],[280,70],[68,280],[280,225],[226,280],[280,150],[152,280]][pair.index],target=point(1080+mesh[0]*Math.cos(angle),445+mesh[1]*Math.sin(angle)),end=point(1080+mesh[0]*Math.cos(angle+Math.PI*1.25),445+mesh[1]*Math.sin(angle+Math.PI*1.25)),cx=box.left+box.width/2,cy=box.top+box.height/2,dx=target.x-cx,dy=target.y-cy,t=Math.min((box.width/2)/Math.max(Math.abs(dx),.001),(box.height/2)/Math.max(Math.abs(dy),.001)),x=cx+dx*t-rect.left,y=cy+dy*t-rect.top,tx=target.x-rect.left,ty=target.y-rect.top,bend=(pair.index%2?1:-1)*Math.min(38,Math.hypot(tx-x,ty-y)*.22),d='M '+x+' '+y+' C '+(x+(tx-x)*.35)+' '+(y+(ty-y)*.12+bend)+' '+(x+(tx-x)*.75)+' '+(y+(ty-y)*.8-bend)+' '+tx+' '+ty;
+d+=' A '+(mesh[0]*Math.hypot(matrix.a,matrix.b))+' '+(mesh[1]*Math.hypot(matrix.c,matrix.d))+' '+(Math.atan2(matrix.b,matrix.a)*180/Math.PI)+' 1 1 '+(end.x-rect.left)+' '+(end.y-rect.top);
+pair.paths.forEach(function(path){path.setAttribute('d',d);});pair.dock.setAttribute('cx',tx);pair.dock.setAttribute('cy',ty);
+});
+}
+function active(){return visible&&!reduced.matches&&!hero.classList.contains('motion-paused');}
+function tick(){frame=0;draw();if(active())frame=requestAnimationFrame(tick);}
+function refresh(){draw();if(active()&&!frame)frame=requestAnimationFrame(tick);else if(!active()&&frame){cancelAnimationFrame(frame);frame=0;}}
+button.addEventListener('click',function(){var paused=hero.classList.toggle('motion-paused');button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Reanudar animación':'Pausar animación';refresh();});
+new ResizeObserver(refresh).observe(hero);
+new IntersectionObserver(function(entries){visible=entries[0].isIntersecting;refresh();}).observe(hero);
+reduced.addEventListener('change',refresh);mobile.addEventListener('change',refresh);
+document.addEventListener('visibilitychange',function(){visible=!document.hidden;refresh();});
+if(document.fonts)document.fonts.ready.then(refresh);refresh();
+})();
 </script>
 </body></html>
