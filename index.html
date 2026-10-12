@@ -110,9 +110,34 @@
 <footer><div class="wrap"><span>Autonomiza · Iván Rodríguez Ruiz · Miranda de Ebro</span><nav aria-label="Otros enlaces"><a href="https://www.linkedin.com/company/autonomiza-es" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/autonomiza.es/" target="_blank" rel="noopener">Instagram</a><a href="/aviso-legal.html">Aviso legal</a><a href="/politica-de-privacidad.html">Privacidad</a></nav></div></footer>
 <script>
 (function(){
-var hero=document.querySelector('.sphere-hero'),button=document.querySelector('.motion-toggle'),sphere=hero.querySelector('.sphere-svg'),links=hero.querySelector('.capability-links'),caps=Array.from(hero.querySelectorAll('.capability')),ns='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:900px)'),visible=true,frame=0,rotation=0,lastTick=null;
+var hero=document.querySelector('.sphere-hero'),button=document.querySelector('.motion-toggle'),sphere=hero.querySelector('.sphere-svg'),links=hero.querySelector('.capability-links'),caps=Array.from(hero.querySelectorAll('.capability')),ns='http://www.w3.org/2000/svg',reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:900px)'),visible=true,frame=0,rotation=0,lastTick=null,signalTime=0;
 function el(tag,attrs,parent){var n=document.createElementNS(ns,tag);Object.keys(attrs).forEach(function(k){n.setAttribute(k,attrs[k]);});parent.appendChild(n);return n;}
-var pairs=caps.map(function(cap,i){var group=el('g',{'data-capability':cap.classList[1],mask:'url(#business-link-absorption)'},links),base=el('path',{class:'cap-connection'},group),glow=el('path',{class:'cap-spark cap-spark-glow',pathLength:1000,filter:'url(#link-glow)'},group),spark=el('path',{class:'cap-spark',pathLength:1000},group),dock=el('circle',{class:'cap-dock',r:2.5},group);[glow,spark].forEach(function(n){n.style.animationDuration='13s,28s';n.style.animationDelay=(-i*2.8)+'s';});return {cap:cap,paths:[base,glow,spark],dock:dock,index:i};});
+var pairs=caps.map(function(cap,i){var group=el('g',{'data-capability':cap.classList[1],mask:'url(#business-link-absorption)'},links),base=el('path',{class:'cap-connection'},group),dock=el('circle',{class:'cap-dock',r:2.5},group);return {cap:cap,paths:[base],dock:dock,index:i};});
+
+var signalCanvas=document.createElement('canvas');signalCanvas.className='signal-canvas';signalCanvas.setAttribute('aria-hidden','true');links.insertAdjacentElement('afterend',signalCanvas);var signalCtx=signalCanvas.getContext('2d');
+function drawSignals(rect,center,radius){
+if(!signalCtx)return;
+var ratio=Math.min(window.devicePixelRatio||1,2),w=Math.round(rect.width*ratio),h=Math.round(rect.height*ratio);
+if(signalCanvas.width!==w||signalCanvas.height!==h){signalCanvas.width=w;signalCanvas.height=h;}
+signalCtx.setTransform(ratio,0,0,ratio,0,0);signalCtx.clearRect(0,0,rect.width,rect.height);
+if(reduced.matches)return;
+var ctx=signalCtx;ctx.globalCompositeOperation='source-over';ctx.lineCap='round';ctx.lineJoin='round';
+pairs.forEach(function(pair){
+var phase=signalTime+pair.index*2800,windowPhase=(phase%28000)/28000,alpha=windowPhase<=.18?1:windowPhase<.20?( .20-windowPhase)/.02:0;
+if(alpha<=0)return;
+var path=pair.paths[0],length=path.getTotalLength();if(!length)return;
+var start=(phase%13000)/13000,finish=start+.07;
+function segment(from,to){
+ctx.beginPath();var count=18;
+for(var j=0;j<=count;j++){var p=path.getPointAtLength((from+(to-from)*j/count)*length);if(j===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);}
+ctx.globalAlpha=alpha*.35;ctx.strokeStyle='#2ec4b6';ctx.lineWidth=7;ctx.shadowColor='#2ec4b6';ctx.shadowBlur=8;ctx.stroke();
+ctx.globalAlpha=alpha;ctx.strokeStyle='#91ffee';ctx.lineWidth=2;ctx.shadowBlur=4;ctx.stroke();
+}
+segment(start,Math.min(finish,1));if(finish>1)segment(0,finish-1);
+});
+ctx.shadowBlur=0;ctx.globalAlpha=1;ctx.globalCompositeOperation='destination-out';var fade=ctx.createRadialGradient(center.x,center.y,radius*.62,center.x,center.y,radius);fade.addColorStop(0,'rgba(0,0,0,1)');fade.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=fade;ctx.beginPath();ctx.arc(center.x,center.y,radius,0,Math.PI*2);ctx.fill();ctx.globalCompositeOperation='source-over';
+}
+
 function draw(){
 var viewBox=mobile.matches?'640 80 840 730':'0 0 1440 900';if(sphere.getAttribute('viewBox')!==viewBox)sphere.setAttribute('viewBox',viewBox);
 var grid=hero.querySelector('.sphere-grid');grid.setAttribute('transform','rotate('+rotation+' 1080 445)');
@@ -125,9 +150,10 @@ pairs.forEach(function(pair){var box=pair.cap.getBoundingClientRect(),angle=angl
 d+=' A '+(mesh[0]*Math.hypot(matrix.a,matrix.b))+' '+(mesh[1]*Math.hypot(matrix.c,matrix.d))+' '+(Math.atan2(matrix.b,matrix.a)*180/Math.PI)+' 1 1 '+(end.x-rect.left)+' '+(end.y-rect.top);
 pair.paths.forEach(function(path){path.setAttribute('d',d);});pair.dock.setAttribute('cx',tx);pair.dock.setAttribute('cy',ty);
 });
+drawSignals(rect,{x:center.x-rect.left,y:center.y-rect.top},130*Math.hypot(matrix.a,matrix.b));
 }
 function active(){return visible&&!reduced.matches&&!hero.classList.contains('motion-paused');}
-function tick(time){frame=0;if(lastTick!==null)rotation=(rotation+(time-lastTick)*360/110000)%360;lastTick=time;draw();if(active())frame=requestAnimationFrame(tick);else lastTick=null;}
+function tick(time){frame=0;if(lastTick!==null){var delta=time-lastTick;signalTime+=delta;rotation=(rotation+delta*360/110000)%360;}lastTick=time;draw();if(active())frame=requestAnimationFrame(tick);else lastTick=null;}
 function refresh(){draw();if(active()&&!frame)frame=requestAnimationFrame(tick);else if(!active()){if(frame)cancelAnimationFrame(frame);frame=0;lastTick=null;}}
 button.addEventListener('click',function(){var paused=hero.classList.toggle('motion-paused');button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Reanudar animación':'Pausar animación';refresh();});
 new ResizeObserver(refresh).observe(hero);
