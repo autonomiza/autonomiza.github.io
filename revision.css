@@ -20,7 +20,7 @@
 body{background-image:linear-gradient(90deg,#1c1c1e 0%,#1c1c1ecc 28%,#1c1c1e55 62%,transparent 100%),radial-gradient(#44444a 1px,transparent 1px);background-size:100% 100%,28px 28px;background-repeat:no-repeat,repeat}
 
 /* Una conexión por capacidad, recalculada mientras el nodo flota. */
-.capability-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:-1;pointer-events:none}.cap-connection{fill:none;stroke:#2ec4b6;stroke-opacity:.24;stroke-width:1}.cap-spark{fill:none;stroke:#91ffee;stroke-width:2;stroke-linecap:round;stroke-dasharray:70 930;animation:signal-travel 13s linear infinite}.cap-spark-glow{stroke:#2ec4b6;stroke-width:7;opacity:.65}.cap-dock{fill:#2ec4b6;opacity:.8}.motion-paused .cap-spark{animation-play-state:paused}
+.capability-links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:-1;pointer-events:none}.cap-connection{fill:none;stroke:#2ec4b6;stroke-opacity:.24;stroke-width:1}.cap-spark{fill:none;stroke:#91ffee;stroke-width:2;stroke-linecap:round;stroke-dasharray:70 1200;opacity:0}.cap-spark-glow{stroke:#2ec4b6;stroke-width:7;opacity:.65}.cap-dock{fill:#2ec4b6;opacity:.8}.motion-paused .cap-spark{animation-play-state:paused}
 @media(max-width:900px){.digital-orbit{top:auto;bottom:20px;height:370px}.sphere-svg{opacity:.85}.cap-connection{stroke-opacity:.48}}
 @media(max-width:480px){.digital-orbit{bottom:24px;height:330px}.cap-dock{r:1.8}}
 @media(prefers-reduced-motion:reduce){.cap-spark{display:none;animation:none}}
@@ -31,3 +31,7 @@ body{background-image:linear-gradient(90deg,#1c1c1e 0%,#1c1c1ecc 28%,#1c1c1e55 6
 .business-core-svg text{fill:#91ffee;opacity:.9;font-family:inherit;font-size:34px;font-weight:500;letter-spacing:2px;text-anchor:middle;filter:drop-shadow(0 0 4px #2ec4b6a0) drop-shadow(0 0 13px #2ec4b640)}
 @media(max-width:900px){.business-core-svg text{font-size:38px;letter-spacing:1.8px}}
 
+
+/* Ciclo de llegada al núcleo y respuesta: texto quieto, pocas luces activas. */
+.cap-receiving{border-color:#2ec4b66b}.core-response-wave{pointer-events:none}
+@media(prefers-reduced-motion:reduce){.core-response-wave{display:none}}
