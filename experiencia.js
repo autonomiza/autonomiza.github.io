@@ -1,138 +1,4 @@
-/* Ejemplos ilustrativos y cálculo local. Ningún dato se envía desde esta página. */
 (function () {
-  'use strict';
-  var examples = {
-    repeticion: {
-      type: 'Una solicitud, de principio a fin',
-      title: 'Un correo no debería convertirse en cinco tareas.',
-      description: 'Llega una solicitud. Alguien copia los datos, comprueba qué falta, prepara una respuesta y recuerda hacer el seguimiento.',
-      steps: [
-        ['Llega la solicitud', 'Se recoge en un único registro.', '↙'],
-        ['Se comprueba lo importante', 'Si falta un dato, se pide antes de avanzar.', '◇'],
-        ['Tú revisas la propuesta', 'La decisión y la aprobación siguen contigo.', '✓'],
-        ['El seguimiento tiene continuidad', 'Se registra el envío y se prepara el próximo aviso.', '↗']
-      ],
-      result: 'Que tu equipo dedique su atención a resolver la solicitud y cada paso tenga un responsable.',
-      criterion: 'La IA puede ayudar a preparar un borrador. Las reglas y la revisión humana deciden qué sale de tu negocio.'
-    },
-    informacion: {
-      type: 'Del pedido a una visión compartida',
-      title: 'Saber qué pasa sin perseguir a todo el equipo.',
-      description: 'El pedido llega por correo, su estado está en una hoja y los cambios se hablan por chat. Para dar una respuesta, primero hay que reconstruir la historia.',
-      steps: [
-        ['Un pedido, una referencia', 'La solicitud y sus documentos quedan vinculados.', '↙'],
-        ['Las herramientas comparten el estado', 'Se conectan las que permiten intercambiar datos.', '⇄'],
-        ['La excepción llega a quien la resuelve', 'Si falta algo o cambia un plazo, se avisa al responsable.', '◇'],
-        ['El equipo ve la misma situación', 'Un panel muestra qué está pendiente y el siguiente paso.', '✓']
-      ],
-      result: 'Encontrar una respuesta en el proceso, sin buscar en cuatro sitios ni depender de la memoria de alguien.',
-      criterion: 'Antes de conectar nada, comprobamos los permisos, los datos disponibles y qué sistema debe ser la referencia.'
-    },
-    atencion: {
-      type: 'Una cancelación, otra oportunidad',
-      title: 'Un hueco libre puede tener otra oportunidad.',
-      description: 'Se cancela una cita. Empiezan las llamadas para reorganizar la agenda mientras el equipo sigue atendiendo a quienes ya están allí.',
-      steps: [
-        ['Se detecta el hueco', 'La agenda informa de la cancelación.', '↙'],
-        ['Se ofrece a quien puede aprovecharlo', '«Se ha quedado libre una cita a las 16:00. ¿Te viene bien?»', '↗'],
-        ['Llega una aceptación', '«Sí, me viene bien.» Se comprueba que siga disponible.', '✓'],
-        ['La agenda refleja la nueva cita', 'Se confirma al paciente y se avisa al equipo.', '⇄']
-      ],
-      result: 'Menos llamadas para reorganizar la agenda y una nueva oportunidad para ese hueco.',
-      criterion: 'El resultado depende de la disponibilidad y la respuesta de los pacientes. Las consultas que requieren criterio se derivan al equipo.'
-    },
-    web: {
-      type: 'De una visita a una solicitud útil',
-      title: 'Una web también puede trabajar contigo.',
-      description: 'Alguien visita tu web, no acaba de entender lo que haces y te manda una consulta sin los datos que necesitas. El trabajo empieza otra vez por teléfono.',
-      steps: [
-        ['Entiende qué puedes hacer por él', 'Un recorrido claro muestra tu propuesta y ejemplos.', '↙'],
-        ['Encuentra el siguiente paso', 'El contacto encaja con lo que necesita preguntar.', '↗'],
-        ['La solicitud llega con contexto', 'Se recoge lo necesario, sin pedir datos de más.', '◇'],
-        ['El proceso sigue dentro del negocio', 'La consulta se registra y llega a la persona adecuada.', '✓']
-      ],
-      result: 'Una web que explique tu negocio y facilite el trabajo que viene después de cada visita.',
-      criterion: 'Diseño, contenido y conexiones se plantean juntos. Los resultados se miden después; no prometemos ventas por cambiar una página.'
-    }
-  };
-  var before = {
-    repeticion: [['Una petición entre otros veinte correos.','Hay que abrirla, leerla y averiguar quién se va a encargar.'],['Otra vez los mismos datos.','Copias la información a una hoja. Falta un dato y toca volver a escribir.'],['El borrador espera un hueco.','Alguien tiene que reunir la información y redactar la respuesta desde cero.'],['¿Nos acordaremos de seguirla?','La propuesta se envía, pero el próximo aviso depende de la memoria.']],
-    informacion: [['El pedido empieza por correo.','Sus documentos y referencias quedan repartidos entre mensajes.'],['Cada herramienta cuenta una parte.','La hoja tiene una fecha y el chat anuncia un cambio distinto.'],['La incidencia se descubre al preguntar.','El equipo pierde tiempo reconstruyendo lo que ha pasado.'],['Hay que consultar a tres personas.','Para responder al cliente, alguien reúne las piezas una a una.']],
-    atencion: [['La cancelación deja un hueco.','El equipo sigue atendiendo y nadie ha empezado a reorganizar la agenda.'],['Comienza la ronda de llamadas.','Hay que buscar quién podría venir e interrumpir otras tareas para contactar.'],['Una respuesta entre varias conversaciones.','Se necesita comprobar que otra persona no haya ocupado ya el hueco.'],['Queda avisar y actualizar.','La nueva cita aún tiene que reflejarse en la agenda del equipo.']],
-    web: [['No se entiende bien qué ofreces.','La visita recorre páginas, pero no encuentra una respuesta a su situación.'],['El contacto no orienta.','Solo hay un formulario genérico, igual para cualquier consulta.'],['Falta lo necesario para responder.','Hay que pedir por teléfono el contexto que no recogió la web.'],['Una consulta más en el buzón.','Asignar un responsable y dar continuidad vuelve a ser una tarea manual.']]
-  };
-  var shortSteps = {repeticion:['Recibir','Comprobar','Preparar','Seguir'],informacion:['Recoger','Conectar','Resolver','Consultar'],atencion:['Detectar','Ofrecer','Comprobar','Confirmar'],web:['Entender','Contactar','Recoger','Continuar']};
-  var objectLabels = {repeticion:'Solicitud',informacion:'Pedido',atencion:'Cita',web:'Consulta'};
-  var selectedCase='repeticion', selectedStep=0, connected=false;
-  var demo=document.getElementById('case-demo'),route=document.getElementById('demo-route');
-  var reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
-  var stepButtons=[];
-  if(demo){
-    for(var i=0;i<4;i++){
-      var stepButton=document.createElement('button');stepButton.type='button';stepButton.dataset.step=i;
-      stepButton.innerHTML='<span class="demo-stop" aria-hidden="true"></span><span class="demo-stop-label"></span>';
-      stepButton.addEventListener('click',function(){selectedStep=Number(this.dataset.step);renderDemo(true);});
-      route.appendChild(stepButton);stepButtons.push(stepButton);
-    }
-    demo.hidden=false;document.getElementById('case-flow').hidden=true;
-    demo.querySelectorAll('[data-mode]').forEach(function(control){control.addEventListener('click',function(){connected=this.dataset.mode==='after';renderDemo(true);});});
-    document.getElementById('demo-connect').addEventListener('click',function(){connected=!connected;renderDemo(true);});
-    document.getElementById('demo-next').addEventListener('click',function(){selectedStep=(selectedStep+1)%4;renderDemo(true);});
-    renderDemo(false);
-  }
-  function renderDemo(animate){
-    if(!demo)return;
-    var data=examples[selectedCase],step=connected?data.steps[selectedStep]:before[selectedCase][selectedStep];
-    demo.dataset.mode=connected?'after':'before';
-    demo.querySelectorAll('[data-mode]').forEach(function(control){control.setAttribute('aria-pressed',String((control.dataset.mode==='after')===connected));});
-    stepButtons.forEach(function(control,index){
-      control.setAttribute('aria-pressed',String(index===selectedStep));
-      control.querySelector('.demo-stop').textContent=index+1;
-      control.querySelector('.demo-stop-label').textContent=shortSteps[selectedCase][index];
-    });
-    document.getElementById('demo-step-status').textContent='Paso '+(selectedStep+1)+' de 4 · '+(connected?'Con el proceso conectado':'Con el atasco');
-    document.getElementById('demo-step-title').textContent=step[0];document.getElementById('demo-step-copy').textContent=step[1];
-    document.getElementById('demo-object-label').textContent=objectLabels[selectedCase];
-    document.getElementById('demo-mark').setAttribute('d',connected?'M59 70l6 6 11-13':'M67 61v11m0 6v1');
-    document.getElementById('demo-connect').innerHTML=connected?'Volver a ver el atasco <span aria-hidden="true">↶</span>':'Conectar este proceso <span aria-hidden="true">↗</span>';
-    document.getElementById('demo-next').innerHTML=selectedStep===3?'Volver al primer paso <span aria-hidden="true">↶</span>':'Siguiente paso <span aria-hidden="true">→</span>';
-    if(animate&&!reducedMotion.matches){
-      var detail=document.getElementById('demo-detail');
-      if(detail.animate){detail.getAnimations().forEach(function(a){a.cancel();});detail.animate([{opacity:.35,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});}
-    }
-  }
-  var buttons = Array.from(document.querySelectorAll('[data-case]'));
-  buttons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      var data = examples[button.dataset.case];
-      if (!data) return;
-      selectedCase=button.dataset.case;selectedStep=0;renderDemo(true);
-      buttons.forEach(function (item) {
-        var selected = item === button;
-        item.classList.toggle('is-selected', selected);
-        item.setAttribute('aria-pressed', String(selected));
-      });
-      ['type', 'title', 'description', 'result', 'criterion'].forEach(function (key) {
-        document.getElementById('case-' + key).textContent = data[key];
-      });
-      var flow = document.getElementById('case-flow');
-      flow.dataset.case = button.dataset.case;
-      flow.replaceChildren();
-      data.steps.forEach(function (step, index) {
-        var item = document.createElement('li');
-        var number = document.createElement('span');
-        number.className = 'flow-index'; number.textContent = index + 1;
-        var copy = document.createElement('div');
-        var title = document.createElement('strong'); title.textContent = step[0];
-        var description = document.createElement('p'); description.textContent = step[1];
-        copy.append(title, description);
-        var symbol = document.createElement('span');
-        symbol.className = 'flow-symbol'; symbol.setAttribute('aria-hidden', 'true'); symbol.textContent = step[2];
-        item.append(number, copy, symbol); flow.appendChild(item);
-      });
-    });
-  });
-
   var form = document.getElementById('time-form');
   var minutes = document.getElementById('task-minutes');
   var repeats = document.getElementById('task-repeats');
@@ -167,4 +33,62 @@
   form.addEventListener('input', calculate);
   form.addEventListener('submit', function (event) { event.preventDefault(); calculate(); });
   calculate();
+})();
+
+(function(){
+  var story=document.querySelector('.organic-story');if(!story)return;
+  var stage=story.querySelector('.organic-stage'),world=story.querySelector('.organic-world'),routes=story.querySelector('.thread-routes');
+  var chapters=Array.from(story.querySelectorAll('.organic-chapter')),marks=Array.from(story.querySelectorAll('.organic-reading span'));
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)'),pause=story.querySelector('.organic-pause'),visible=false,frame=0,paused=false,current=-1,ambient=0,last=0,elapsed=0,curves=[],order=0;
+  var icons={mail:'M3 5h26v20H3z M3 6l13 10L29 6',data:'M5 4h22v24H5z M10 10h12 M10 16h12 M10 22h7',doc:'M7 3h13l6 6v20H7z M20 3v7h6 M12 16h9 M12 22h9',person:'M16 16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z M5 29v-3a11 8 0 0 1 22 0v3',send:'M3 15L29 3 20 29l-6-11-11-3z M14 18L29 3',time:'M16 29a13 13 0 1 0 0-26 13 13 0 0 0 0 26z M16 8v9l7 4'};
+  var data=[
+    ['mail','Una solicitud','Por responder','Recibida',[250,100,-13],[110,160,0]],
+    ['data','Los datos','Falta información','Completos',[560,210,12],[360,160,0]],
+    ['doc','La propuesta','Copiar otra vez','Preparada',[180,325,-9],[610,160,0]],
+    ['person','Tu revisión','¿Quién lo mira?','Tú decides',[470,385,8],[610,430,0]],
+    ['send','La respuesta','¿Se ha enviado?','Enviada',[90,145,10],[360,430,0]],
+    ['time','El seguimiento','Que no se olvide','Próximo paso',[215,490,-7],[110,430,0]]
+  ];
+  var nodes=data.map(function(d,i){var n=document.createElement('div');n.className='organic-task task-'+i;n.innerHTML='<div class="task-float"><div class="task-paper"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="'+icons[d[0]]+'"/></svg><span class="task-kind">'+d[1]+'</span><strong class="task-state">'+d[2]+'</strong><div class="task-detail"><i></i><i></i></div><span class="task-check">✓</span></div></div>';world.appendChild(n);return n;});
+  var lines=data.slice(1).map(function(_,i){var n=document.createElementNS('http://www.w3.org/2000/svg','path');n.setAttribute('class','thread-route');routes.appendChild(n);return n;});
+  var packets=[0,1,2].map(function(){var dot=document.createElement('span');dot.className='organic-packet';world.appendChild(dot);return dot;});
+  var clamp=function(x){return Math.max(0,Math.min(1,x));},ease=function(x){x=clamp(x);return x*x*(3-2*x);},mix=function(a,b,t){return a+(b-a)*t;};
+  function staticMode(){return reduced.matches||innerHeight<520;}
+  function paint(){
+    frame=0;
+    var rect=story.getBoundingClientRect(),distance=story.offsetHeight-innerHeight;
+    var progress=clamp((100-rect.top)/Math.max(1,distance-220));
+    var stable=staticMode(),t=stable?1:ease((progress-.10)/.72);
+    order=t;story.style.setProperty('--order',t.toFixed(3));story.style.setProperty('--scatter',(1-t).toFixed(3));story.style.setProperty('--reveal',clamp((t-.78)/.22).toFixed(3));
+    story.classList.toggle('organic-static',stable);story.classList.toggle('is-ordered',t>.65);
+    var poses=data.map(function(d,i){var local=stable?1:ease((progress-.08-i*.025)/.68),a=d[4],b=d[5];var p=[mix(a[0],b[0],local),mix(a[1],b[1],local)];nodes[i].style.transform='translate3d('+(p[0]-86)+'px,'+(p[1]-58)+'px,0) rotate('+mix(a[2],b[2],local)+'deg)';nodes[i].style.setProperty('--done',local>.65?1:0);nodes[i].querySelector('.task-state').textContent=local>.65?d[3]:d[2];return p;});
+    lines.forEach(function(line,i){var a=poses[i],b=poses[i+1],bend=(i%2?1:-1)*mix(270,0,t),middle=(a[0]+b[0])/2;
+      // Horizontal links soften into a single downward turn at the review step.
+      var c1=[middle+bend,a[1]-bend],c2=[middle-bend,b[1]+bend];
+      if(i===2){c1=[mix(c1[0],700,t),mix(c1[1],a[1],t)];c2=[mix(c2[0],700,t),mix(c2[1],b[1],t)];}
+      curves[i]=[a,c1,c2,b];
+      line.setAttribute('d','M'+a.join(' ')+' C'+c1.join(' ')+' '+c2.join(' ')+' '+b.join(' '));
+    });
+    var chapter=stable?2:progress<.32?0:progress<.71?1:2;
+    if(chapter!==current){current=chapter;chapters.forEach(function(n,i){n.classList.toggle('is-current',i===chapter);if(!stable)n.setAttribute('aria-hidden',String(i!==chapter));else n.removeAttribute('aria-hidden');});marks.forEach(function(n,i){n.classList.toggle('is-current',i===chapter);});story.querySelector('.organic-status').textContent=['Demasiados hilos sueltos.','Cada pieza encuentra su sitio.','Un recorrido claro, de principio a fin.'][chapter];}
+    story.dataset.chapter=chapter;story.dataset.progress=progress.toFixed(3);
+  }
+  function request(){if(!frame&&visible)frame=requestAnimationFrame(paint);}
+  function resize(){var width=stage.clientWidth,height=stage.clientHeight;world.style.setProperty('--scene-scale',Math.min(width/720,height/600));current=-1;paint();suspension();}
+  function animate(time){
+    ambient=0;if(!visible||document.hidden||paused||staticMode()){last=0;return;}
+    if(!last)last=time;
+    if(time-last>=40){elapsed+=Math.min(time-last,80);last=time;
+      packets.forEach(function(dot,i){var f=((elapsed/13000+i/3)%1)*5,segment=Math.floor(f),t=f-segment,u=1-t,c=curves[segment];if(!c)return;var x=u*u*u*c[0][0]+3*u*u*t*c[1][0]+3*u*t*t*c[2][0]+t*t*t*c[3][0],y=u*u*u*c[0][1]+3*u*u*t*c[1][1]+3*u*t*t*c[2][1]+t*t*t*c[3][1];dot.style.transform='translate3d('+(x-4)+'px,'+(y-4)+'px,0)';dot.style.opacity=order>.1?Math.min(1,order+.25):.3;});
+    }
+    ambient=requestAnimationFrame(animate);
+  }
+  function suspension(){var running=visible&&!document.hidden&&!paused&&!staticMode();story.classList.toggle('organic-running',running);if(running&&!ambient)ambient=requestAnimationFrame(animate);else if(!running){cancelAnimationFrame(ambient);ambient=0;last=0;}}
+  new IntersectionObserver(function(entries){visible=entries[0].isIntersecting;suspension();request();},{rootMargin:'100px'}).observe(story);
+  new ResizeObserver(resize).observe(stage);
+  addEventListener('scroll',request,{passive:true});addEventListener('resize',resize,{passive:true});
+  document.addEventListener('visibilitychange',function(){suspension();if(!document.hidden)request();});
+  reduced.addEventListener('change',function(){resize();suspension();});
+  pause.hidden=false;pause.addEventListener('click',function(){paused=!paused;pause.setAttribute('aria-pressed',String(paused));pause.textContent=paused?'Reanudar movimiento':'Pausar movimiento';story.classList.toggle('organic-paused',paused);suspension();});
+  story.classList.add('organic-enhanced');resize();
 })();
