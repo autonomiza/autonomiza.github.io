@@ -76,10 +76,19 @@
         <button type="button" aria-controls="case-panel" class="problem-choice" data-case="web" aria-pressed="false"><span><strong>Tu web se ha quedado atrás.</strong><small>Tu negocio tiene más que contar y ofrecer.</small></span><span class="choice-arrow" aria-hidden="true">↗</span></button>
         <a class="own-problem" href="#contacto">El mío es otro. <span>También queremos escucharlo ↗</span></a>
       </div>
-      <article class="case-panel" id="case-panel" aria-labelledby="case-title" aria-live="polite" aria-atomic="true">
+      <article class="case-panel" id="case-panel" aria-labelledby="case-title">
         <div class="case-topline"><span class="case-type" id="case-type">Una solicitud, de principio a fin</span><span class="example-label">Ejemplo ilustrativo</span></div>
         <h3 id="case-title">Un correo no debería convertirse en cinco tareas.</h3>
         <p class="case-description" id="case-description">Llega una solicitud. Alguien copia los datos, comprueba qué falta, prepara una respuesta y recuerda hacer el seguimiento.</p>
+        <div class="case-demo" id="case-demo" hidden>
+          <div class="demo-toolbar"><p>Prueba otra forma de trabajar.</p><div class="demo-modes" role="group" aria-label="Compara el proceso"><button type="button" data-mode="before" aria-pressed="true">Con el atasco</button><button type="button" data-mode="after" aria-pressed="false">Conectado</button></div></div>
+          <div class="demo-route" id="demo-route" role="group" aria-label="Explora cada paso"></div>
+          <div class="demo-detail" id="demo-detail" aria-live="polite" aria-atomic="true">
+            <div class="demo-object" aria-hidden="true"><svg viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="2"><rect x="20" y="12" width="56" height="72" rx="5"/><path d="M32 30h32M32 42h32M32 54h19"/><circle cx="67" cy="70" r="16" class="demo-seal"/><path id="demo-mark" d="M67 61v11m0 6v1"/></svg><span id="demo-object-label">Solicitud</span></div>
+            <div class="demo-copy"><span id="demo-step-status">Paso 1 de 4 · Con el atasco</span><h4 id="demo-step-title"></h4><p id="demo-step-copy"></p></div>
+          </div>
+          <div class="demo-controls"><button type="button" class="demo-connect" id="demo-connect">Conectar este proceso <span aria-hidden="true">↗</span></button><button type="button" class="demo-next" id="demo-next">Siguiente paso <span aria-hidden="true">→</span></button></div>
+        </div>
         <ol class="case-flow" id="case-flow">
           <li><span class="flow-index">1</span><div><strong>Llega la solicitud</strong><p>Se recoge en un único registro.</p></div><span class="flow-symbol" aria-hidden="true">↙</span></li>
           <li><span class="flow-index">2</span><div><strong>Se comprueba lo importante</strong><p>Si falta un dato, se pide antes de avanzar.</p></div><span class="flow-symbol" aria-hidden="true">◇</span></li>

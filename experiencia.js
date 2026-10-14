@@ -55,11 +55,58 @@
       criterion: 'Diseño, contenido y conexiones se plantean juntos. Los resultados se miden después; no prometemos ventas por cambiar una página.'
     }
   };
+  var before = {
+    repeticion: [['Una petición entre otros veinte correos.','Hay que abrirla, leerla y averiguar quién se va a encargar.'],['Otra vez los mismos datos.','Copias la información a una hoja. Falta un dato y toca volver a escribir.'],['El borrador espera un hueco.','Alguien tiene que reunir la información y redactar la respuesta desde cero.'],['¿Nos acordaremos de seguirla?','La propuesta se envía, pero el próximo aviso depende de la memoria.']],
+    informacion: [['El pedido empieza por correo.','Sus documentos y referencias quedan repartidos entre mensajes.'],['Cada herramienta cuenta una parte.','La hoja tiene una fecha y el chat anuncia un cambio distinto.'],['La incidencia se descubre al preguntar.','El equipo pierde tiempo reconstruyendo lo que ha pasado.'],['Hay que consultar a tres personas.','Para responder al cliente, alguien reúne las piezas una a una.']],
+    atencion: [['La cancelación deja un hueco.','El equipo sigue atendiendo y nadie ha empezado a reorganizar la agenda.'],['Comienza la ronda de llamadas.','Hay que buscar quién podría venir e interrumpir otras tareas para contactar.'],['Una respuesta entre varias conversaciones.','Se necesita comprobar que otra persona no haya ocupado ya el hueco.'],['Queda avisar y actualizar.','La nueva cita aún tiene que reflejarse en la agenda del equipo.']],
+    web: [['No se entiende bien qué ofreces.','La visita recorre páginas, pero no encuentra una respuesta a su situación.'],['El contacto no orienta.','Solo hay un formulario genérico, igual para cualquier consulta.'],['Falta lo necesario para responder.','Hay que pedir por teléfono el contexto que no recogió la web.'],['Una consulta más en el buzón.','Asignar un responsable y dar continuidad vuelve a ser una tarea manual.']]
+  };
+  var shortSteps = {repeticion:['Recibir','Comprobar','Preparar','Seguir'],informacion:['Recoger','Conectar','Resolver','Consultar'],atencion:['Detectar','Ofrecer','Comprobar','Confirmar'],web:['Entender','Contactar','Recoger','Continuar']};
+  var objectLabels = {repeticion:'Solicitud',informacion:'Pedido',atencion:'Cita',web:'Consulta'};
+  var selectedCase='repeticion', selectedStep=0, connected=false;
+  var demo=document.getElementById('case-demo'),route=document.getElementById('demo-route');
+  var reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+  var stepButtons=[];
+  if(demo){
+    for(var i=0;i<4;i++){
+      var stepButton=document.createElement('button');stepButton.type='button';stepButton.dataset.step=i;
+      stepButton.innerHTML='<span class="demo-stop" aria-hidden="true"></span><span class="demo-stop-label"></span>';
+      stepButton.addEventListener('click',function(){selectedStep=Number(this.dataset.step);renderDemo(true);});
+      route.appendChild(stepButton);stepButtons.push(stepButton);
+    }
+    demo.hidden=false;document.getElementById('case-flow').hidden=true;
+    demo.querySelectorAll('[data-mode]').forEach(function(control){control.addEventListener('click',function(){connected=this.dataset.mode==='after';renderDemo(true);});});
+    document.getElementById('demo-connect').addEventListener('click',function(){connected=!connected;renderDemo(true);});
+    document.getElementById('demo-next').addEventListener('click',function(){selectedStep=(selectedStep+1)%4;renderDemo(true);});
+    renderDemo(false);
+  }
+  function renderDemo(animate){
+    if(!demo)return;
+    var data=examples[selectedCase],step=connected?data.steps[selectedStep]:before[selectedCase][selectedStep];
+    demo.dataset.mode=connected?'after':'before';
+    demo.querySelectorAll('[data-mode]').forEach(function(control){control.setAttribute('aria-pressed',String((control.dataset.mode==='after')===connected));});
+    stepButtons.forEach(function(control,index){
+      control.setAttribute('aria-pressed',String(index===selectedStep));
+      control.querySelector('.demo-stop').textContent=index+1;
+      control.querySelector('.demo-stop-label').textContent=shortSteps[selectedCase][index];
+    });
+    document.getElementById('demo-step-status').textContent='Paso '+(selectedStep+1)+' de 4 · '+(connected?'Con el proceso conectado':'Con el atasco');
+    document.getElementById('demo-step-title').textContent=step[0];document.getElementById('demo-step-copy').textContent=step[1];
+    document.getElementById('demo-object-label').textContent=objectLabels[selectedCase];
+    document.getElementById('demo-mark').setAttribute('d',connected?'M59 70l6 6 11-13':'M67 61v11m0 6v1');
+    document.getElementById('demo-connect').innerHTML=connected?'Volver a ver el atasco <span aria-hidden="true">↶</span>':'Conectar este proceso <span aria-hidden="true">↗</span>';
+    document.getElementById('demo-next').innerHTML=selectedStep===3?'Volver al primer paso <span aria-hidden="true">↶</span>':'Siguiente paso <span aria-hidden="true">→</span>';
+    if(animate&&!reducedMotion.matches){
+      var detail=document.getElementById('demo-detail');
+      if(detail.animate){detail.getAnimations().forEach(function(a){a.cancel();});detail.animate([{opacity:.35,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)'}],{duration:260,easing:'ease-out'});}
+    }
+  }
   var buttons = Array.from(document.querySelectorAll('[data-case]'));
   buttons.forEach(function (button) {
     button.addEventListener('click', function () {
       var data = examples[button.dataset.case];
       if (!data) return;
+      selectedCase=button.dataset.case;selectedStep=0;renderDemo(true);
       buttons.forEach(function (item) {
         var selected = item === button;
         item.classList.toggle('is-selected', selected);
