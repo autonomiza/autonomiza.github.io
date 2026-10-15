@@ -5,6 +5,7 @@
  if(!ctx)return;
  const chapters=[...document.querySelectorAll('.chapter')],nodeLayer=document.querySelector('.scene-nodes'),icons=[...document.querySelectorAll('.business')];
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:700px)');
+ const shortLandscape=matchMedia('(orientation:landscape) and (max-height:540px)');
  const pause=document.querySelector('#pause'),caption=document.querySelector('#scene-caption'),founder=document.querySelector('.founder-photo'),signature=document.querySelector('.scene-signature'),meter=document.querySelector('.journey-meter i');
  const names=[['Automatización','Diseño web','Agentes de IA','Inteligencia artificial','Aplicaciones a medida','Integraciones','Datos y paneles','Gestión documental','Asistentes de chat','Atención al cliente'],['Un correo','Falta un dato','Copiar y pegar','¿Quién lo revisa?','Enviar otra vez','¿Qué quedó pendiente?'],['Solicitud web','Datos reunidos','Borrador de IA','Tu revisión','Propuesta enviada','Seguimiento'],['1 · Entender','2 · Acordar','3 · Probar','4 · Acompañar']];
  const captions=['Todo empieza en tu negocio.','Demasiados hilos sueltos.','De una cancelación a una cita confirmada.','Entender, acordar, probar y acompañar.','La tecnología conecta. El trato es personal.'];
@@ -49,12 +50,18 @@
    w=scene.clientWidth;h=scene.clientHeight;labelState=-1;
    const pixelBudget=lite?650000:1100000,dpr=Math.min(devicePixelRatio||1,lite?1:1.5,Math.sqrt(pixelBudget/(w*h)));
    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
-   anchors=chapters.map(el=>{const top=el.getBoundingClientRect().top+scrollY;return mobile.matches?top-64:top+el.offsetHeight/2-(innerHeight+82)/2;});
+   const headerHeight=document.querySelector('header').offsetHeight;
+   anchors=chapters.map(el=>{const top=el.getBoundingClientRect().top+scrollY;return mobile.matches&&!shortLandscape.matches?top-headerHeight:top+el.offsetHeight/2-(innerHeight+headerHeight)/2;});
    const relative=el=>{let x=0,y=0;for(let n=el;n&&n!==scene;n=n.offsetParent){x+=n.offsetLeft;y+=n.offsetTop;}return{x,y,width:el.offsetWidth,height:el.offsetHeight};};
    const target=relative(document.querySelector('.cal-target')),cal=relative(document.querySelector('.clinic-calendar')),cards=[...document.querySelectorAll('.wait-card')].map(relative);
    clinicRoutes=Array.from({length:6},(_,i)=>{const card=cards[i%3],left=i<3,A=left?[cal.x,target.y+target.height/2]:[card.x+card.width,card.y+card.height/2],B=left?[card.x,card.y+card.height/2]:[cal.x+cal.width,target.y+target.height/2],outer=left?Math.max(6,cal.x-24-i*6):Math.min(w-5,cal.x+cal.width+12+(i-3)*5);return[A,[outer,A[1]],[outer,B[1]],B];});
    const main=relative(document.querySelector('.clinic-chat'));
    clinicMainRoutes=Array.from({length:6},(_,i)=>{const left=i<3,A=left?[cal.x,target.y+target.height/2]:[main.x+main.width,main.y+main.height/2],B=left?[main.x,main.y+main.height/2]:[cal.x+cal.width,target.y+target.height/2],outer=left?Math.max(6,cal.x-24-i*6):Math.min(w-5,cal.x+cal.width+12+(i-3)*5);return[A,[outer,A[1]],[outer,B[1]],B];});
+   if(shortLandscape.matches){
+     const between=(card,i)=>{const A=[cal.x+cal.width,target.y+target.height/2],B=[card.x,card.y+card.height/2],x=(A[0]+B[0])/2+(i%3-1)*3;return i<3?[A,[x,A[1]],[x,B[1]],B]:[B,[x,B[1]],[x,A[1]],A];};
+     clinicRoutes=Array.from({length:6},(_,i)=>between(cards[i%3],i));
+     clinicMainRoutes=Array.from({length:6},(_,i)=>between(main,i));
+   }
    measureScroll();
  }
  function measureScroll(){

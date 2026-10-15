@@ -74,3 +74,53 @@
 @media(max-width:700px){.clinic-message{min-height:60px}}
 
 @media(max-width:700px){.stage-wrap{min-height:370px}.story{margin-top:calc(-1 * max(40svh,370px))}.chapter{padding-top:calc(max(40svh,370px) + 32px)}}
+
+/* A rotated phone has width, but little height below the browser controls.
+   Keep the calendar and conversation beside each other, never stacked. */
+@media(orientation:landscape) and (max-height:540px){
+ :root{--header:50px}
+ header{height:var(--header)}header nav{display:none}
+ .journey{display:grid;grid-template-columns:38% 62%}
+ .stage-wrap{grid-column:2;grid-row:1;top:var(--header);height:calc(100svh - var(--header));min-height:0;z-index:5}
+ .story{grid-column:1;grid-row:1;margin-top:0}
+ .chapter{padding:40px 6% 40px 8%;min-height:650px}
+ .demo-chapter{min-height:900px}
+ .chapter h1,.chapter h2,.demo-chapter h2{font-size:clamp(27px,3.7vw,38px)}
+ .chapter p{font-size:12px;line-height:1.7}
+ .scene,.stage-wrap .scene{bottom:36px}
+ .scene-bottom{left:5%;right:5%;bottom:6px;gap:8px}
+ .scene-bottom p{font-size:9px;line-height:1.3;max-width:65%}
+ .scene-bottom button{font-size:9px;min-height:28px}
+ .journey-meter{bottom:3px;left:5%;right:5%}
+ .demo-scene{inset:3% 5% 2%;gap:5px}
+ .clinic-demo .demo-context{font-size:9px;gap:8px}
+ .clinic-demo .demo-context span:last-child{font-size:7px}
+ .clinic-calendar{top:25px;left:0;right:auto;width:45%;height:calc(100% - 52px);min-height:0}
+ .calendar-title{padding:7px 8px;font-size:10px}.calendar-title>span{display:none}
+ .calendar-days,.calendar-slots{grid-template-columns:27px repeat(2,minmax(0,1fr));gap:4px;padding:5px 6px}
+ .calendar-days{font-size:8px}.calendar-slots{grid-auto-rows:clamp(28px,8svh,40px)}
+ .calendar-days>:nth-child(4),.calendar-slots>:nth-child(4n){display:none}
+ .calendar-slots>:nth-child(n+9):not(:nth-child(4n)){display:flex}
+ .cal-event{font-size:8px;padding:3px;border-left-width:3px;line-height:1.25}
+ .cal-time{font-size:8px;padding-top:7px}
+ .clinic-chat,.clinic-fan{top:25px;left:auto;right:0;width:48%;bottom:auto}
+ .clinic-chat{padding:9px;gap:7px;border-radius:10px}
+ .chat-heading{gap:5px;flex-wrap:wrap}.chat-heading svg{width:18px;height:18px}
+ .chat-heading strong{font-size:12px}.chat-heading div>span{font-size:8px}.chat-person{font-size:8px}
+ .clinic-message{font-size:11px;line-height:1.45;min-height:70px;padding:8px;border-radius:7px}
+ .clinic-review{font-size:8px;line-height:1.4}
+ .clinic-fan{gap:5px}.wait-card{padding:6px 8px;border-radius:7px}
+ .wait-card>div{font-size:9px;gap:5px}.wait-card small{font-size:7px}
+ .wait-card p{font-size:9px;line-height:1.3;margin:3px 0 0}
+ .clinic-demo[data-step="3"] .wait-card:last-child{transform:translateX(-3px)}
+ #demo-web .demo-outcome{position:absolute;bottom:0;left:0;right:0;margin:0;font-size:9px!important;line-height:1.3;min-height:20px}
+ .node{font-size:9px}.scene::after{font-size:10px}
+}
+@media(orientation:landscape) and (max-height:340px){
+ :root{--header:44px}.scene,.stage-wrap .scene{bottom:30px}
+ .clinic-message{min-height:56px;font-size:10px;padding:6px}
+ .clinic-chat{gap:5px;padding:7px}.clinic-fan{gap:3px}
+ .wait-card{padding:4px 6px}.wait-card p{font-size:8px;margin-top:2px}
+ .calendar-slots{grid-auto-rows:27px}
+ .calendar-slots>:nth-child(n+9){display:none!important}
+}
