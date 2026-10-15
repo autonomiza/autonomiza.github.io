@@ -124,3 +124,25 @@
  .calendar-slots{grid-auto-rows:27px}
  .calendar-slots>:nth-child(n+9){display:none!important}
 }
+
+/* Wide but short laptop: calendar and messages share a row. */
+@media(min-width:701px) and (min-height:541px) and (max-height:760px){
+ .clinic-calendar{top:32px;left:0;right:auto;width:46%;height:min(260px,calc(100% - 85px));min-height:0}
+ .calendar-title{padding:12px 10px;font-size:11px}.calendar-title>span{display:none}
+ .calendar-days,.calendar-slots{grid-template-columns:32px repeat(3,minmax(0,1fr));gap:4px;padding:7px}
+ .calendar-days{font-size:9px}.calendar-slots{grid-auto-rows:42px}
+ .cal-event{font-size:9px;padding:4px;border-left-width:3px}.cal-time{font-size:9px}
+ .clinic-chat,.clinic-fan{top:32px;right:0;left:auto;width:48%;bottom:auto}
+ .clinic-chat{padding:12px;gap:10px}
+ .chat-heading{gap:7px}.chat-heading strong{font-size:15px}.chat-heading div>span{font-size:10px}.chat-person{font-size:9px}
+ .clinic-message{font-size:13px;line-height:1.5;padding:10px;min-height:100px}
+ .clinic-review{font-size:9px}
+ .clinic-fan{gap:9px}.wait-card{padding:10px}.wait-card>div{font-size:10px;gap:7px}.wait-card small{font-size:8px}.wait-card p{font-size:11px}
+ #demo-web .demo-outcome{position:absolute;bottom:0;left:0;right:0;margin:0;font-size:10px!important;min-height:25px}
+}
+@media(min-width:701px) and (max-width:1050px) and (min-height:541px) and (max-height:760px){
+ .calendar-days,.calendar-slots{grid-template-columns:26px repeat(2,minmax(0,1fr))}
+ .calendar-days>:nth-child(4),.calendar-slots>:nth-child(4n){display:none}
+ .chat-heading{flex-wrap:wrap}.chat-heading strong{font-size:13px}.clinic-message{font-size:12px}
+ .wait-card>div{flex-wrap:wrap}.wait-card p{font-size:10px}
+}

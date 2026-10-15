@@ -63,7 +63,7 @@
    clinicRoutes=Array.from({length:6},(_,i)=>{const card=cards[i%3],left=i<3,A=left?[cal.x,target.y+target.height/2]:[card.x+card.width,card.y+card.height/2],B=left?[card.x,card.y+card.height/2]:[cal.x+cal.width,target.y+target.height/2],outer=left?Math.max(6,cal.x-24-i*6):Math.min(w-5,cal.x+cal.width+12+(i-3)*5);return[A,[outer,A[1]],[outer,B[1]],B];});
    const main=relative(document.querySelector('.clinic-chat'));
    clinicMainRoutes=Array.from({length:6},(_,i)=>{const left=i<3,A=left?[cal.x,target.y+target.height/2]:[main.x+main.width,main.y+main.height/2],B=left?[main.x,main.y+main.height/2]:[cal.x+cal.width,target.y+target.height/2],outer=left?Math.max(6,cal.x-24-i*6):Math.min(w-5,cal.x+cal.width+12+(i-3)*5);return[A,[outer,A[1]],[outer,B[1]],B];});
-   if(shortLandscape.matches){
+   if(shortLandscape.matches||matchMedia('(min-width:701px) and (max-height:760px)').matches){
      const between=(card,i)=>{const A=[cal.x+cal.width,target.y+target.height/2],B=[card.x,card.y+card.height/2],x=(A[0]+B[0])/2+(i%3-1)*3;return i<3?[A,[x,A[1]],[x,B[1]],B]:[B,[x,B[1]],[x,A[1]],A];};
      clinicRoutes=Array.from({length:6},(_,i)=>between(cards[i%3],i));
      clinicMainRoutes=Array.from({length:6},(_,i)=>between(main,i));
