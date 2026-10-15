@@ -16,7 +16,7 @@
 /* Keep the original photograph pixels; use only the extracted silhouette as alpha. */
 .founder-photo img{object-fit:contain;object-position:center;width:100%;height:100%;mask-image:url('assets/ivan-silueta-mask.svg');mask-size:100% 100%;mask-repeat:no-repeat;-webkit-mask-image:url('assets/ivan-silueta-mask.svg');-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat}
 .stage-wrap::before{content:'';position:absolute;inset:0;background:#1c1c1e;opacity:var(--portrait-reveal,0);pointer-events:none}
-.stage-wrap[data-phase="4"] .scene{background:none}
+.stage-wrap[data-phase="5"] .scene{background:none}
 .scene-signature{top:calc(16% + min(62%,335px) + 22px);left:0;right:0;align-items:center;text-align:center}
 .node.method-step{font-size:18px;padding:14px 22px;background:#203635;border-color:#2ec4b680}
 .node.method-step:before{display:none}
