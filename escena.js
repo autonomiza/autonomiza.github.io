@@ -66,8 +66,44 @@
    const list=state===1?tangled:ordered,n=list[i%6];return[n[0]*w,n[1]*h];
  }
  function businessPoint(i){const theta=-Math.PI*.75+i*Math.PI/2+ambient*.065,r=Math.min(w,h)*.14;return[w*.5+Math.cos(theta)*r,h*.5+Math.sin(theta)*r];}
+ // A handful of existing grid points breathe slowly; no additional animation loop.
+ let sphereBounds={x:0,y:0,r:0};
+ const twinkleLayer=document.createElement('div');twinkleLayer.className='ambient-twinkles';twinkleLayer.setAttribute('aria-hidden','true');document.body.append(twinkleLayer);
+ function excludeSphere(){
+   const box=scene.getBoundingClientRect();sphereBounds={x:box.left+w/2,y:box.top+h/2,r:Math.min(w*.35,h*.40)+12};
+   scene.style.setProperty('--sphere-radius',sphereBounds.r+'px');
+   scene.style.setProperty('--sphere-clear',String(1-smooth(clamp(p/.5))));
+   for(const dot of twinkleLayer.children){const inside=p<.5&&Math.hypot(parseFloat(dot.style.left)-sphereBounds.x,parseFloat(dot.style.top)-sphereBounds.y)<sphereBounds.r+12;dot.style.visibility=inside?'hidden':'visible';}
+ }
+ function placeTwinkles(){
+   const vw=document.documentElement.clientWidth,vh=innerHeight,header=document.querySelector('header').offsetHeight;
+   const columns=Math.max(1,Math.floor(vw/32)),rows=Math.max(1,Math.floor((vh-header-24)/32)),count=mobile.matches?6:12,positions=new Map();
+   twinkleLayer.replaceChildren();
+   function move(dot){
+     let selected=null;
+     for(let attempt=0;attempt<60;attempt++){
+       const col=Math.floor(Math.random()*columns),row=Math.floor(Math.random()*rows);
+       const x=mobile.matches?vw-2-col*32:12+col*32,y=12+32*(Math.ceil(header/32)+row);
+       if(x<vw*.22||y>vh-16)continue;
+       if(p<.5&&Math.hypot(x-sphereBounds.x,y-sphereBounds.y)<sphereBounds.r+12)continue;
+       if([...positions].some(([other,q])=>other!==dot&&Math.hypot(q.x-x,q.y-y)<(mobile.matches?112:180)))continue;
+       selected={x,y};break;
+     }
+     if(!selected)return;
+     positions.set(dot,selected);dot.style.left=selected.x+'px';dot.style.top=selected.y+'px';
+     dot.style.setProperty('--glow',(.85+.15*selected.x/vw).toFixed(3));
+   }
+   for(let i=0;i<count;i++){
+     const dot=document.createElement('i'),period=7+Math.random()*2;
+     dot.style.setProperty('--breathe',period.toFixed(2)+'s');
+     // Stagger first appearances, then choose a fresh distant grid point while dark.
+     dot.style.animationDelay=(-period*((.5+i/count)%1)).toFixed(2)+'s';
+     move(dot);if(!positions.has(dot))continue;dot.addEventListener('animationiteration',()=>{move(dot);excludeSphere();});twinkleLayer.append(dot);
+   }
+ }
+ function syncTwinkles(){twinkleLayer.dataset.paused=String(paused||document.hidden||reduced.matches);}
  function measure(){
-   w=scene.clientWidth;h=scene.clientHeight;labelState=-1;
+   w=scene.clientWidth;h=scene.clientHeight;labelState=-1;excludeSphere();placeTwinkles();
    // Follow the sphere's radius on desktop; measure only when layout changes.
    scene.style.setProperty('--business-size',`${clamp(Math.min(w*.35,h*.40)*.30,76,104).toFixed(1)}px`);
    businessSize=icons[0].clientWidth;
@@ -104,6 +140,7 @@
    const y=scrollY;let index=0;while(index<anchors.length-2&&y>anchors[index+1])index++;
    p=clamp(index+(y-anchors[index])/(anchors[index+1]-anchors[index]),0,5);
    if(reduced.matches)p=Math.round(p);
+   excludeSphere();
    dirty=true;wake();
  }
  function draw(){
@@ -119,8 +156,6 @@
      if(show){const q=point(3,i+1,smooth(u));el.style.transform=`translate(${(q[0]-invoiceOrigin.x).toFixed(1)}px,${(q[1]-invoiceOrigin.y).toFixed(1)}px) translate(-50%,-50%)`;}
      el.style.opacity=show?String(Math.min(1,u*8,(1-u)*8)):0;
    });
-   // Static small dots establish spatial continuity; only six paths are redrawn.
-   ctx.fillStyle=`rgba(166,242,231,${.12*(1-smooth(clamp(p-4)))})`;for(let x=24;x<w;x+=32)for(let y=18;y<h;y+=32){ctx.fillRect(x,y,1,1);}
    const steps=lite?40:64,lines=[];
    for(let i=0;i<6;i++){
      const points=[];ctx.beginPath();
@@ -219,10 +254,10 @@
    if(animated&&!raf)raf=requestAnimationFrame(tick);
  }
  function wake(){if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(tick);}
- pause.addEventListener('click',()=>{paused=!paused;stage.dataset.paused=String(paused);pause.setAttribute('aria-pressed',String(paused));pause.textContent=paused?'Reanudar movimiento':'Pausar movimiento';dirty=true;last=0;wake();});
- function motionPreference(){pause.hidden=reduced.matches;dirty=true;measureScroll();}
+ pause.addEventListener('click',()=>{paused=!paused;syncTwinkles();stage.dataset.paused=String(paused);pause.setAttribute('aria-pressed',String(paused));pause.textContent=paused?'Reanudar movimiento':'Pausar movimiento';dirty=true;last=0;wake();});
+ function motionPreference(){syncTwinkles();pause.hidden=reduced.matches;dirty=true;measureScroll();}
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}},{threshold:0}).observe(stage);
- document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}});
+ document.addEventListener('visibilitychange',()=>{syncTwinkles();if(document.hidden){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}});
  addEventListener('scroll',measureScroll,{passive:true});addEventListener('resize',measure,{passive:true});reduced.addEventListener('change',motionPreference);
  document.fonts.ready.then(measure);measure();motionPreference();
 })();

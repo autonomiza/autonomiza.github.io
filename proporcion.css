@@ -92,3 +92,26 @@ html,body,header,.stage-wrap{background:var(--base)}
 @media(min-width:951px) and (min-height:541px) and (pointer:fine){
  .business{width:var(--business-size,76px);height:var(--business-size,76px)}
 }
+
+/* Regular 32px lattice, matching the published density.
+   The near-black overlay fades the dots from bright right to quiet left.
+   Both layers share a fixed viewport origin across the sticky scene and page. */
+:root{--dot-step:32px;--dot-pattern:radial-gradient(circle at 12px 12px,rgba(166,242,231,.50) 0 .65px,rgba(46,196,182,.22) 1px,rgba(46,196,182,.065) 2px,transparent 3.5px);--dot-fade:linear-gradient(to right,rgba(9,11,12,.93) 0%,rgba(9,11,12,.65) 35%,rgba(9,11,12,.28) 70%,rgba(9,11,12,0) 100%)}
+body,.stage-wrap,header{background-color:var(--base);background-image:var(--dot-fade),var(--dot-pattern);background-size:100vw 100vh,var(--dot-step) var(--dot-step);background-position:0 0;background-attachment:fixed}
+.stage-wrap::before{background:transparent}
+
+/* Start the mobile lattice at the right edge rather than leaving a partial tile. */
+@media(max-width:700px){
+ :root{--dot-pattern:radial-gradient(circle at 30px 12px,rgba(166,242,231,.50) 0 .65px,rgba(46,196,182,.22) 1px,rgba(46,196,182,.065) 2px,transparent 3.5px)}
+ body,.stage-wrap,header{background-position:0 0,right top}
+}
+
+/* Sparse, slow breathing of points already on the lattice; never flashes. */
+.ambient-twinkles{position:fixed;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+.ambient-twinkles i{position:absolute;width:22px;height:22px;margin:-11px;background:radial-gradient(circle,#f5fffd 0 1px,#bfffee 2px,rgba(46,196,182,.75) 6px,rgba(46,196,182,0) 11px);clip-path:polygon(50% 0,54% 44%,100% 50%,54% 56%,50% 100%,46% 56%,0 50%,46% 44%);opacity:0;animation:point-breathe var(--breathe) ease-in-out infinite}
+/* Keep the sphere itself clear of the background lattice; its own lights remain. */
+.scene::before{content:'';position:absolute;left:50%;top:50%;width:calc(var(--sphere-radius,0px)*2);height:calc(var(--sphere-radius,0px)*2);transform:translate(-50%,-50%);border-radius:50%;background:var(--base);opacity:var(--sphere-clear,1);pointer-events:none;z-index:0}
+
+@keyframes point-breathe{0%,10%,92%,100%{opacity:0}30%,72%{opacity:var(--glow)}}
+.ambient-twinkles[data-paused=true] i{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.ambient-twinkles{display:none}}
