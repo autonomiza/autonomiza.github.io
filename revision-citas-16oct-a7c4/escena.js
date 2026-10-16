@@ -106,15 +106,12 @@
    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
    const headerHeight=document.querySelector('header').offsetHeight;
    readingEnds=[];
-   anchors=chapters.map(el=>{const top=el.getBoundingClientRect().top+scrollY;
-     if(mobile.matches&&!shortLandscape.matches){
-       // Finish each transition as its text reaches the reading area; hold while reading.
-       const text=el.firstElementChild,rect=text.getBoundingClientRect();
-       const start=rect.top+scrollY-headerHeight-stage.offsetHeight-20;
-       readingEnds.push(Math.max(start,rect.bottom+scrollY-innerHeight+32));
-       return start;
-     }
-     return top+el.offsetHeight/2-(innerHeight+headerHeight)/2;
+   anchors=chapters.map(el=>{
+     const rect=el.firstElementChild.getBoundingClientRect();
+     const inset=mobile.matches&&!shortLandscape.matches?stage.offsetHeight+20:Math.max(24,(innerHeight-headerHeight-rect.height)/2);
+     const start=rect.top+scrollY-headerHeight-inset;
+     readingEnds.push(Math.max(start,rect.bottom+scrollY-innerHeight+32));
+     return start;
    });
    const relative=el=>{let x=0,y=0;for(let n=el;n&&n!==scene;n=n.offsetParent){x+=n.offsetLeft;y+=n.offsetTop;}return{x,y,width:el.offsetWidth,height:el.offsetHeight};};
    const target=relative(document.querySelector('.cal-target')),cal=relative(document.querySelector('.clinic-calendar')),cards=[...document.querySelectorAll('.wait-card')].map(relative);
@@ -273,5 +270,22 @@
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}},{threshold:0}).observe(stage);
  document.addEventListener('visibilitychange',()=>{syncTwinkles();if(document.hidden){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}});
  addEventListener('scroll',measureScroll,{passive:true});addEventListener('resize',measure,{passive:true});reduced.addEventListener('change',motionPreference);
- document.fonts.ready.then(measure);measure();motionPreference();
+ // Navigation and animation share the same measured reading positions.
+ function navigateChapter(hash,animate=false){
+   const index=chapters.findIndex(el=>hash==='#'+el.id&&el.id);
+   if(index<0&&hash!=='#contenido')return false;
+   const top=index<0?0:Math.max(0,Math.ceil(anchors[index]));
+   window.scrollTo({top,behavior:animate&&!reduced.matches?'smooth':'instant'});
+   return true;
+ }
+ document.addEventListener('click',event=>{
+   const link=event.target.closest('a[href^="#"]');
+   if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+   const hash=link.getAttribute('href');
+   if(!navigateChapter(hash,true))return;
+   event.preventDefault();
+   if(location.hash!==hash)history.pushState(null,'',hash);
+ });
+ addEventListener('hashchange',()=>navigateChapter(location.hash));
+ document.fonts.ready.then(()=>{measure();navigateChapter(location.hash);});measure();motionPreference();
 })();
