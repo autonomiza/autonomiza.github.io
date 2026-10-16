@@ -5,14 +5,15 @@
  if(!ctx)return;
  const chapters=[...document.querySelectorAll('.chapter')],nodeLayer=document.querySelector('.scene-nodes'),icons=[...document.querySelectorAll('.business')];
  const reduced=matchMedia('(prefers-reduced-motion: reduce)'),mobile=matchMedia('(max-width:700px)');
+ const desktopFloat=matchMedia('(min-width:951px) and (min-height:541px) and (pointer:fine)');
  const shortLandscape=matchMedia('(orientation:landscape) and (max-height:540px)');
  const pause=document.querySelector('#pause'),caption=document.querySelector('#scene-caption'),founder=document.querySelector('.founder-photo'),signature=document.querySelector('.scene-signature'),meter=document.querySelector('.journey-meter i');
- const names=[['Automatización','Diseño web','Agentes de IA','Inteligencia artificial','Aplicaciones a medida','Integraciones','Datos y paneles','Gestión documental','Asistentes de chat','Atención al cliente'],['Un correo','Falta un dato','Copiar y pegar','¿Quién lo revisa?','Enviar otra vez','¿Qué quedó pendiente?'],['Solicitud web','Datos reunidos','Borrador de IA','Tu revisión','Propuesta enviada','Seguimiento'],['1 · Entender','2 · Acordar','3 · Probar','4 · Acompañar']];
+ const names=[['Automatización','Diseño web','Asistentes de chat','Aplicaciones a medida','Inteligencia artificial','Agenda inteligente','Integraciones','Gestión de información'],['Un correo','Falta un dato','Copiar y pegar','¿Quién lo revisa?','Enviar otra vez','¿Qué quedó pendiente?'],['Solicitud web','Datos reunidos','Borrador de IA','Tu revisión','Propuesta enviada','Seguimiento'],['1 · Entender','2 · Acordar','3 · Probar','4 · Acompañar']];
  const captions=['Todo empieza en tu negocio.','Demasiados hilos sueltos.','De una cancelación a una cita confirmada.','Del documento a los datos. Con revisión humana.','Entender, acordar, probar y acompañar.','La tecnología conecta. El trato es personal.'];
  const descriptions=['Esfera de capacidades digitales con oficina, comercio, fábrica y taller en el centro.','Los mismos hilos se abren y cruzan entre tareas dispersas.','Ejemplo ficticio: un recordatorio recibe una cancelación; salen tres avisos por WhatsApp a la lista de espera y una respuesta confirma el hueco según las reglas del negocio.','Ejemplo ficticio: un correo trae una factura, sus datos se preparan y se señala un proyecto pendiente de confirmar.','Las conexiones recorren cuatro pasos: entender tu trabajo, acordar el alcance, probar la solución y acompañarte.','El recorrido termina en el retrato original de Iván, junto a su presentación.'];
- let widths=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0};
+ let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0};
  const invoiceTokens=[...document.querySelectorAll('.invoice-token')];
- const nodes=Array.from({length:10},(_,i)=>{const n=document.createElement('span');n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
+ const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement('span');n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
  let w=0,h=0,anchors=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t),TAU=Math.PI*2;
  const ordered=[[.23,.22],[.75,.22],[.75,.50],[.23,.50],[.23,.78],[.75,.78]];
@@ -48,9 +49,28 @@
    const u=smooth(clamp(first?(p-1)/.43:(p-1.43)/.51));
    return[mix(A[0],B[0],u),mix(A[1],B[1],u)];
  }
- function nodePoint(state,i){if(state>=4){const n=methodSteps[i%4];return[n[0]*w,n[1]*h];}if(state===0){if(mobile.matches)return[w*(i<5?.17:.83),h*(.12+(i%5)*.19)];const a=-Math.PI/2+i*TAU/10+Math.sin(ambient*.12)*.035;return[w*(.5+Math.cos(a)*.37),h*(.5+Math.sin(a)*.39)];}const list=state===1?tangled:ordered;const n=list[i%6];return[n[0]*w,n[1]*h];}
+ function nodePoint(state,i){
+   if(state>=4){const n=methodSteps[i%4];return[n[0]*w,n[1]*h];}
+   if(state===0){
+     if(mobile.matches){const rows=Math.ceil(names[0].length/2);return[w*(i<rows?.17:.83),h*(.14+(i%rows)*(.72/Math.max(1,rows-1)))];}
+     // Shared clock keeps floating labels, their threads and pause in sync.
+     // A bounded arc preserves order and horizontal text; each label breathes separately.
+     const time=reduced.matches?0:ambient,phase=i*1.37;
+     const drift=desktopFloat.matches?Math.sin(time*.24)*.075+(Math.sin(time*.43+phase)-Math.sin(phase))*.018:Math.sin(time*.12)*.035;
+     const a=-Math.PI/2+i*TAU/names[0].length+drift;
+     const ux=Math.cos(a),uy=Math.sin(a),halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
+     const radius=Math.min(w*.35,h*.40),clearance=halfWidth*Math.abs(ux)+halfHeight*Math.abs(uy)+18;
+     const float=desktopFloat.matches?(Math.sin(time*.55+phase)-Math.sin(phase))*4:0;
+     return[w*.5+ux*(radius+clearance+float),clamp(h*.5+uy*(radius+clearance+float),halfHeight+8,h-halfHeight-8)];
+   }
+   const list=state===1?tangled:ordered,n=list[i%6];return[n[0]*w,n[1]*h];
+ }
+ function businessPoint(i){const theta=-Math.PI*.75+i*Math.PI/2+ambient*.065,r=Math.min(w,h)*.14;return[w*.5+Math.cos(theta)*r,h*.5+Math.sin(theta)*r];}
  function measure(){
    w=scene.clientWidth;h=scene.clientHeight;labelState=-1;
+   // Follow the sphere's radius on desktop; measure only when layout changes.
+   scene.style.setProperty('--business-size',`${clamp(Math.min(w*.35,h*.40)*.30,76,104).toFixed(1)}px`);
+   businessSize=icons[0].clientWidth;
    const pixelBudget=lite?650000:1100000,dpr=Math.min(devicePixelRatio||1,lite?1:1.5,Math.sqrt(pixelBudget/(w*h)));
    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
    const headerHeight=document.querySelector('header').offsetHeight;
@@ -89,6 +109,8 @@
  function draw(){
    const gp=p<1?p:p<1.94?1+(p-1)/.94:p<2.35?2:p<2.9?2+(p-2.35)/.55:p<3.35?3:p<4?3+(p-3.35)/.65:p;
    const a=Math.floor(gp),b=Math.min(5,a+1),t=smooth(gp-a),closest=Math.round(p);
+   const labelPhase=p<.5?0:p<1.5?1:p<3.5?2:3;
+   if(labelPhase!==labelState){nodes.forEach((n,i)=>{n.textContent=names[labelPhase][i]||'';n.classList.toggle('review',labelPhase===2&&i===3);n.classList.toggle('method-step',labelPhase===3);});labelState=labelPhase;widths=nodes.map(n=>n.offsetWidth);labelHeights=nodes.map(n=>n.offsetHeight);}
    ctx.clearRect(0,0,w,h);
    const demoOpacity=Math.max(clamp((p-1.5)*2)*clamp((3.5-p)*2),0);ctx.globalAlpha=p>=1&&p<=2.35?.95:p>=2.75&&p<=3.25?.85:1-demoOpacity*.8;
    window.renderDemonstration(p,ambient,paused,reduced.matches);
@@ -107,6 +129,54 @@
      const invoiceActive=invoiceShown&&invoice&&(i===0?invoice.step===0:i===5?invoice.step===3:invoice.progress[i-1]>0&&invoice.progress[i-1]<1);
      ctx.strokeStyle=invoiceShown?(i===5?'rgba(229,201,142,'+(invoiceActive?.65:.12)+')':'rgba(46,196,182,'+(invoiceActive?.8:.18)+')'):`rgba(46,196,182,${p<1?.26+i*.045:p>3?.38:.55})`;ctx.lineWidth=p<1?1:1.3;ctx.stroke();lines.push(points);
    }
+   // Service threads dock onto the existing curves, sharing their scroll geometry.
+   // No extra canvas, animation loop, blur or per-frame DOM measurements.
+   const serviceAlpha=1-smooth(clamp(p/.5));
+   const responsiveSignal=!reduced.matches,compactSignal=mobile.matches||shortLandscape.matches;
+   const signalCycle=ambient/3.8,signalUnit=signalCycle%1,signalService=Math.floor(signalCycle)%names[0].length,signalBusiness=signalService%icons.length;
+   const sourceEnergy=responsiveSignal?serviceAlpha*smooth(clamp(signalUnit/.08))*(1-smooth(clamp((signalUnit-.35)/.35))):0;
+   const received=clamp((signalUnit-.68)/.27),businessEnergy=responsiveSignal?serviceAlpha*Math.sin(received*Math.PI):0;
+   if(serviceAlpha>0){
+     const cycle=responsiveSignal?signalCycle:ambient/1.6,active=Math.floor(cycle)%names[0].length,travel=clamp((cycle%1)/.78);
+     for(let i=0;i<names[0].length;i++){
+       const A=nodePoint(a,i),B=nodePoint(b,i),halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
+       const margin=Math.min(w/2,halfWidth+5),x=clamp(mix(A[0],B[0],t),margin,w-margin),y=mix(A[1],B[1],t);
+       const dx=w*.5-x,dy=h*.5-y,len=Math.max(1,Math.hypot(dx,dy)),ux=dx/len,uy=dy/len;
+       const edge=Math.min(halfWidth/Math.max(.001,Math.abs(ux)),halfHeight/Math.max(.001,Math.abs(uy)));
+       const start=[x+ux*edge,y+uy*edge],orbit=mobile.matches?3:(i%4===2?3:0),angle=orbit*Math.PI/6+ambient*.035;
+       const flatten=orbit%3===0?.25:orbit%3===1?.62:1;
+       const localX=-ux*Math.cos(angle)-uy*Math.sin(angle),localY=ux*Math.sin(angle)-uy*Math.cos(angle);
+       const dock=(Math.atan2(localY/flatten,localX)/TAU+1)%1;
+       const from=point(a,orbit,dock),to=point(b,orbit,dock),end=[mix(from[0],to[0],t),mix(from[1],to[1],t)];
+       const bend=(i%2?1:-1)*Math.min(14,len*.045),control=[(start[0]+end[0])/2-uy*bend,(start[1]+end[1])/2+ux*bend];
+       ctx.beginPath();ctx.moveTo(...start);ctx.quadraticCurveTo(...control,...end);
+       ctx.strokeStyle=`rgba(46,196,182,${serviceAlpha*.46})`;ctx.lineWidth=1;ctx.stroke();
+       const quadratic=(A,C,B,u)=>{const v=1-u;return[v*v*A[0]+2*v*u*C[0]+u*u*B[0],v*v*A[1]+2*v*u*C[1]+u*u*B[1]];};
+       const onCurve=u=>quadratic(start,control,end,u);
+       if(i===active&&responsiveSignal){
+         // A single signal continues from its orbit dock to the moving business.
+         const business=businessPoint(signalBusiness),vx=end[0]-business[0],vy=end[1]-business[1],distance=Math.max(1,Math.hypot(vx,vy));
+         const target=[business[0]+vx/distance*businessSize*.40,business[1]+vy/distance*businessSize*.40];
+         const innerControl=[end[0]+(end[0]-control[0])*.30,end[1]+(end[1]-control[1])*.30];
+         const lengthA=Math.hypot(end[0]-start[0],end[1]-start[1]),lengthB=Math.hypot(target[0]-end[0],target[1]-end[1]),split=clamp(lengthA/Math.max(1,lengthA+lengthB),.2,.8);
+         const path=u=>u<=split?onCurve(u/split):quadratic(end,innerControl,target,(u-split)/(1-split));
+         const routeEnergy=serviceAlpha*smooth(clamp(signalUnit/.10))*(1-smooth(clamp((signalUnit-.78)/.17)));
+         ctx.beginPath();ctx.moveTo(...end);ctx.quadraticCurveTo(...innerControl,...target);ctx.lineWidth=1;ctx.strokeStyle=`rgba(46,196,182,${routeEnergy*.38})`;ctx.stroke();
+         const progress=clamp((signalUnit-.12)/.56);
+         if(signalUnit>.12&&signalUnit<.68){
+           for(let k=5;k>=0;k--){const head=path(Math.max(0,progress-k*.016)),tail=path(Math.max(0,progress-(k+1)*.016));ctx.beginPath();ctx.moveTo(...tail);ctx.lineTo(...head);ctx.lineWidth=compactSignal?1.6:2.2;ctx.strokeStyle=`rgba(211,255,246,${serviceAlpha*(1-k/6)})`;ctx.stroke();}
+           const head=path(progress);ctx.beginPath();ctx.arc(head[0],head[1],compactSignal?1.4:2,0,TAU);ctx.fillStyle=`rgba(235,255,252,${serviceAlpha})`;ctx.fill();
+         }
+         if(businessEnergy>0){
+           ctx.beginPath();ctx.arc(business[0],business[1],businessSize*(.55+received*(compactSignal?.10:.16)),0,TAU);
+           ctx.fillStyle=`rgba(46,196,182,${businessEnergy*(compactSignal?.055:.085)})`;ctx.fill();ctx.lineWidth=1;ctx.strokeStyle=`rgba(166,242,231,${businessEnergy*(compactSignal?.38:.55)})`;ctx.stroke();
+         }
+       }else if(i===active&&travel>0&&travel<1&&!reduced.matches){
+         const envelope=Math.sin(travel*Math.PI);
+         for(let k=0;k<4;k++){const head=onCurve(Math.max(0,travel-k*.045)),tail=onCurve(Math.max(0,travel-(k+1)*.045));ctx.beginPath();ctx.moveTo(...tail);ctx.lineTo(...head);ctx.strokeStyle=`rgba(166,242,231,${serviceAlpha*envelope*(1-k/4)})`;ctx.lineWidth=1.8;ctx.stroke();}
+       }
+     }
+   }
    // Fractional positions preserve sub-pixel travel between sampled vertices.
    function along(trail,u){const f=clamp(u)*steps,n=Math.min(steps-1,Math.floor(f)),q=f-n;return[mix(trail[n][0],trail[n+1][0],q),mix(trail[n][1],trail[n+1][1],q)];}
    // Short light trails in a single canvas: no SVG filters or blur compositing.
@@ -118,16 +188,23 @@
    }
    // Once unfolded, labels/photos only need updating when scroll or inputs change.
    if(!dirty&&p>=1)return;
-   const labelPhase=p<.5?0:p<1.5?1:p<3.5?2:3;
-   if(labelPhase!==labelState){nodes.forEach((n,i)=>{n.textContent=names[labelPhase][i]||'';n.classList.toggle('review',labelPhase===2&&i===3);n.classList.toggle('method-step',labelPhase===3);});labelState=labelPhase;widths=nodes.map(n=>n.offsetWidth);}
    nodes.forEach((n,i)=>{
      const sa=a,sb=b,A=nodePoint(sa,i),B=nodePoint(sb,i),x=mix(A[0],B[0],t),y=mix(A[1],B[1],t);
      const opacity=(p>1.5&&p<3.5)?0:labelPhase===3?(i<4?smooth(clamp((p-3.5)*2))*(1-smooth(clamp((p-4.25)*2))):0):(i<6?1-smooth(clamp(p-2)):1-smooth(clamp(p*2)));
      const shown=opacity*(p>1&&p<1.5?1-smooth(clamp((p-1)/.32)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';
-     const half=Math.min(w*.2,(widths[i]||100)/2+5);
+     const energy=i===signalService?sourceEnergy:0;
+     n.style.borderColor=energy>0?`rgba(46,196,182,${.29+energy*.65})`:'';
+     n.style.backgroundColor=energy>0?`rgba(${Math.round(28+energy*5)},${Math.round(41+energy*28)},${Math.round(43+energy*24)},.90)`:'';
+     const half=Math.min(w/2,(widths[i]||100)/2+5);
      n.style.transform=`translate(${clamp(x,half,w-half).toFixed(1)}px,${y.toFixed(1)}px) translate(-50%,-50%)`;
    });
-   icons.forEach((icon,i)=>{const theta=-Math.PI*.75+i*Math.PI/2+ambient*.065,r=Math.min(w,h)*.14;icon.style.opacity=(1-smooth(clamp(p*1.5))).toFixed(3);icon.style.transform=`translate(${(w*.5+Math.cos(theta)*r).toFixed(1)}px,${(h*.5+Math.sin(theta)*r).toFixed(1)}px) translate(-50%,-50%)`;});
+   icons.forEach((icon,i)=>{
+     const position=businessPoint(i),energy=i===signalBusiness?businessEnergy:0;
+     icon.style.opacity=(1-smooth(clamp(p*1.5))).toFixed(3);
+     icon.style.transform=`translate(${position[0].toFixed(1)}px,${position[1].toFixed(1)}px) translate(-50%,-50%) scale(${(1+energy*(compactSignal?.035:.065)).toFixed(3)})`;
+     icon.style.color=energy>0?`rgb(${Math.round(166+energy*76)},${Math.round(242+energy*13)},${Math.round(231+energy*21)})`:'';
+     icon.style.strokeWidth=energy>0?(3+energy*.65).toFixed(2):'';
+   });
    founder.style.opacity=smooth(clamp((p-4.25)*1.6)).toFixed(3);
    stage.style.setProperty('--portrait-reveal',smooth(clamp((p-4.25)*1.6)).toFixed(3));
    signature.style.opacity=smooth(clamp((p-4.5)*2)).toFixed(3);
