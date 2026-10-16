@@ -52,16 +52,11 @@
  function nodePoint(state,i){
    if(state>=4){const n=methodSteps[i%4];return[n[0]*w,n[1]*h];}
    if(state===0){
-     if(mobile.matches){const rows=Math.ceil(names[0].length/2);return[w*(i<rows?.17:.83),h*(.14+(i%rows)*(.72/Math.max(1,rows-1)))];}
-     // Shared clock keeps floating labels, their threads and pause in sync.
-     // A bounded arc preserves order and horizontal text; each label breathes separately.
-     const time=reduced.matches?0:ambient,phase=i*1.37;
-     const drift=desktopFloat.matches?Math.sin(time*.24)*.075+(Math.sin(time*.43+phase)-Math.sin(phase))*.018:Math.sin(time*.12)*.035;
-     const a=-Math.PI/2+i*TAU/names[0].length+drift;
-     const ux=Math.cos(a),uy=Math.sin(a),halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
-     const radius=Math.min(w*.35,h*.40),clearance=halfWidth*Math.abs(ux)+halfHeight*Math.abs(uy)+18;
-     const float=desktopFloat.matches?(Math.sin(time*.55+phase)-Math.sin(phase))*4:0;
-     return[w*.5+ux*(radius+clearance+float),clamp(h*.5+uy*(radius+clearance+float),halfHeight+8,h-halfHeight-8)];
+     // Names orbit as upright labels; the same points anchor their connecting threads.
+     const time=reduced.matches?0:ambient,angle=-Math.PI/2+i*TAU/names[0].length+time*TAU/110;
+     const halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
+     const rx=mobile.matches?w*.49:Math.min(w*.42,w/2-12),ry=h*.43;
+     return[clamp(w*.5+Math.cos(angle)*rx,halfWidth+6,w-halfWidth-6),clamp(h*.5+Math.sin(angle)*ry,halfHeight+8,h-halfHeight-8)];
    }
    const list=state===1?tangled:ordered,n=list[i%6];return[n[0]*w,n[1]*h];
  }
@@ -256,12 +251,22 @@
    meter.style.width=(p/5*100).toFixed(2)+'%';
  }
  function tick(now){raf=0;if(document.hidden||!visible){last=0;return;}const dt=last?now-last:0;if(last&&dt<32){raf=requestAnimationFrame(tick);return;}last=now;
-   const animated=!paused&&!reduced.matches;
+   const animated=!paused&&!reduced.matches&&!interactionHolds.size;
    if(animated){ambient+=Math.min(dt,70)/1000;if(dt>52)slow++;else slow=Math.max(0,slow-1);if(slow>35&&!lite){lite=true;measure();}}
    if(dirty||animated){draw();dirty=false;}
    if(animated&&!raf)raf=requestAnimationFrame(tick);
  }
  function wake(){if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(tick);}
+ const interactionHolds=new Set();
+ function holdNames(reason,hold){if(hold)interactionHolds.add(reason);else interactionHolds.delete(reason);dirty=true;last=0;wake();}
+ const serviceLink=nodes[5];
+ serviceLink.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')holdNames('hover',true);});
+ serviceLink.addEventListener('pointerleave',()=>holdNames('hover',false));
+ serviceLink.addEventListener('focus',()=>holdNames('focus',true));
+ serviceLink.addEventListener('blur',()=>holdNames('focus',false));
+ serviceLink.addEventListener('pointerdown',()=>holdNames('press',true));
+ addEventListener('pointerup',()=>holdNames('press',false));
+ addEventListener('pointercancel',()=>holdNames('press',false));
  pause.addEventListener('click',()=>{paused=!paused;syncTwinkles();stage.dataset.paused=String(paused);pause.setAttribute('aria-pressed',String(paused));pause.textContent=paused?'Reanudar movimiento':'Pausar movimiento';dirty=true;last=0;wake();});
  function motionPreference(){syncTwinkles();pause.hidden=reduced.matches;dirty=true;measureScroll();}
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}},{threshold:0}).observe(stage);
