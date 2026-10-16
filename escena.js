@@ -14,7 +14,7 @@
  let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0};
  const invoiceTokens=[...document.querySelectorAll('.invoice-token')];
  const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement('span');n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
- let w=0,h=0,anchors=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
+ let w=0,h=0,anchors=[],readingEnds=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t),TAU=Math.PI*2;
  const ordered=[[.23,.22],[.75,.22],[.75,.50],[.23,.50],[.23,.78],[.75,.78]];
  const methodSteps=[[.36,.18],[.64,.40],[.36,.62],[.64,.84]];
@@ -110,8 +110,15 @@
    const pixelBudget=lite?650000:1100000,dpr=Math.min(devicePixelRatio||1,lite?1:1.5,Math.sqrt(pixelBudget/(w*h)));
    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
    const headerHeight=document.querySelector('header').offsetHeight;
+   readingEnds=[];
    anchors=chapters.map(el=>{const top=el.getBoundingClientRect().top+scrollY;
-     if(mobile.matches&&!shortLandscape.matches){const text=el.firstElementChild;return text.getBoundingClientRect().top+scrollY+text.offsetHeight/2-(innerHeight+headerHeight+stage.offsetHeight)/2;}
+     if(mobile.matches&&!shortLandscape.matches){
+       // Finish each transition as its text reaches the reading area; hold while reading.
+       const text=el.firstElementChild,rect=text.getBoundingClientRect();
+       const start=rect.top+scrollY-headerHeight-stage.offsetHeight-20;
+       readingEnds.push(Math.max(start,rect.bottom+scrollY-innerHeight+32));
+       return start;
+     }
      return top+el.offsetHeight/2-(innerHeight+headerHeight)/2;
    });
    const relative=el=>{let x=0,y=0;for(let n=el;n&&n!==scene;n=n.offsetParent){x+=n.offsetLeft;y+=n.offsetTop;}return{x,y,width:el.offsetWidth,height:el.offsetHeight};};
@@ -138,7 +145,8 @@
  }
  function measureScroll(){
    const y=scrollY;let index=0;while(index<anchors.length-2&&y>anchors[index+1])index++;
-   p=clamp(index+(y-anchors[index])/(anchors[index+1]-anchors[index]),0,5);
+   const start=readingEnds.length?Math.min(readingEnds[index],anchors[index+1]-1):anchors[index];
+   p=readingEnds.length?index+clamp((y-start)/(anchors[index+1]-start),0,1):clamp(index+(y-start)/(anchors[index+1]-start),0,5);
    if(reduced.matches)p=Math.round(p);
    excludeSphere();
    dirty=true;wake();

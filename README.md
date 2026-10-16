@@ -14,10 +14,14 @@ El retrato utiliza los píxeles originales con una máscara alfa para ocultar el
 
 Prueba local revisada en móvil y ordenador; aprobación visual de Iván. Sintaxis, pausa y retirada del efecto al cambiar de escena comprobadas; sin medición de FPS en dispositivos físicos. La comprobación pública se registra en la coordinación del proyecto después del despliegue.
 
-Versión pública anterior: 51f0299f6dd7cfa74a04bb51c212537848247a6c. Si aparecen fallos de lectura, navegación o animación que impidan usar la web, revertir este despliegue mediante un commit nuevo, preservando el historial.
+Versión pública anterior: 23499ee96a4608db10af5711855462f763f99847. Si aparecen fallos de lectura, navegación o animación que impidan usar la web, revertir este despliegue mediante un commit nuevo, preservando el historial.
 
 ## Fondo aprobado el16/10/2026
 
 Trama regular32px en toda la página, con brillo decreciente de derecha a izquierda. En móvil empieza junto al borde derecho. Estrellas finas de cuatro puntas, posiciones aleatorias separadas112/180px, máximo6/12puntos móvil/ordenador y brillo sostenido3–3,8s. La esfera excluye los puntos del fondo y los nuevos destellos; conserva sus propias órbitas y conexiones luminosas. La exclusión se adapta al tamaño y al retorno con scroll. Sin bibliotecas nuevas. Movimiento reducido oculta las estrellas; pausa y pestaña oculta detienen su animación.
 
 Esta versión sustituye la pública51f0299 con autorización expresa de Iván; será la base para próximos trabajos de contenido. El enlace de prueba local se conserva.
+
+## Lectura móvil continua aprobada el 16/10/2026
+
+Capítulos en móvil vertical separados por64px, sin reservas de escena repetidas. La transición termina cuando el comienzo del texto llega al área de lectura y se mantiene durante su lectura; agenda y WhatsApp completos al leer el titular. Aplicado también a factura, método y presentación. Escritorio y horizontal conservan sus cálculos. Verificado en390×720 y390×844 y aprobado por Iván en móvil. Sin nuevas dependencias; rollback23499ee mediante nuevo commit si falla lectura o animación.

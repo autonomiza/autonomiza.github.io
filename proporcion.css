@@ -115,3 +115,12 @@ body,.stage-wrap,header{background-color:var(--base);background-image:var(--dot-
 @keyframes point-breathe{0%,10%,92%,100%{opacity:0}30%,72%{opacity:var(--glow)}}
 .ambient-twinkles[data-paused=true] i{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){.ambient-twinkles{display:none}}
+
+/* Continuous mobile reading: reserve the sticky scene once at the opening.
+   Later chapters follow their actual content instead of viewport-sized blanks. */
+@media(max-width:700px) and (orientation:portrait){
+ .story .chapter{min-height:0;padding-bottom:32px}
+ .story .chapter:not(.opening){padding-top:32px;scroll-margin-top:calc(var(--header) + var(--portrait-stage) + 20px - 32px - 65px)}
+ .story .chapter>div{margin-top:0;margin-bottom:0}
+ .story .chapter>div>:last-child{margin-bottom:0}
+}
