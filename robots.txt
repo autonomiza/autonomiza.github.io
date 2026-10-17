@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://autonomiza.es/sitemap.xml
