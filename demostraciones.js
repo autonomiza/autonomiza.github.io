@@ -3,13 +3,13 @@
  const web=document.querySelector('#demo-web'),work=document.querySelector('#demo-work');
  const webText=web.querySelector('[data-web-outcome]'),workText=work.querySelector('[data-work-outcome]');
  const invoiceRows=[...work.querySelectorAll('.invoice-row')],invoiceSources=[...work.querySelectorAll('.invoice-source')],invoiceStages=[...work.querySelectorAll('.invoice-journey>span')],invoiceCount=work.querySelector('[data-invoice-count]');
- const messages=[['Se recuerda la cita por WhatsApp.','Un «no puedo ir» libera el hueco.','Un hueco. Tres avisos a la lista de espera.','Irene responde: «Sí, me viene bien».','La confirmación vuelve a la agenda.'],['El documento llega a tu correo.','Se recoge la información que contiene.','Los datos quedan preparados en un mismo lugar.','Lo que falta se señala para revisión humana.']];
+ const messages=[['Se recuerda la cita por WhatsApp.','Un «no puedo ir» libera el hueco.','Menos de 6 horas: tres avisos a la vez.','Irene responde: «Sí, me viene bien».','La confirmación vuelve a la agenda.'],['El documento llega a tu correo.','Se recoge la información que contiene.','Los datos quedan preparados en un mismo lugar.','Un posible duplicado requiere revisión.']];
  const clinic=[
- ['Rubén · Por confirmar','Rubén','Hola, Rubén. Te recordamos tu cita de hoy a las 16:00. ¿Puedes venir?','Recordatorio enviado'],
+ ['Rubén · Por confirmar','Rubén','Hola, Rubén. Tu cita es hoy a las 16:00. ¿Puedes venir?','Recordatorio enviado'],
  ['Hueco libre','Rubén','No voy a poder ir. Lo siento.','Cancelación recibida · Se libera el hueco'],
- ['Avisando a la lista','Lista de espera','Tres avisos enviados.','Se avisa según las reglas de recepción'],
+ ['Avisando a la lista','Lista de espera','Hueco urgente. Tres avisos enviados.','Menos de 6 horas: aviso a tres a la vez'],
  ['Confirmando','Irene','Sí, me viene bien. ¡Gracias por avisarme!','Se comprueba que el hueco sigue disponible'],
- ['Irene S. · Confirmada','Irene','Tu cita queda confirmada hoy a las 16:00. Te esperamos.','Agenda actualizada · Equipo informado']
+ ['Irene S. · Confirmada','Irene','Tu cita queda confirmada hoy a las 16:00. ¡Hasta pronto!','Agenda actualizada · Equipo informado']
  ];
  let active=-1,start=0,lastStep=-1,lastInvoiceKey='';
  const clamp=v=>Math.max(0,Math.min(1,v));
@@ -38,7 +38,7 @@
      invoiceSources.forEach((el,i)=>el.dataset.active=String(progress[i]>0&&progress[i]<1));
      invoiceStages.forEach((el,i)=>{el.classList.toggle('is-current',i===step);el.classList.toggle('is-complete',i<step);});
      invoiceCount.textContent=String(count);
-     workText.textContent=step===0?'Una factura llega con el correo.':step===1?'Se leen los datos del documento.':step===2?`${count} de 4 datos en su sitio.`:'4 datos preparados. 1 decisión pendiente.';
+     workText.textContent=step===0?'Una factura llega con el correo.':step===1?'Se leen los datos del documento.':step===2?`${count} de 4 datos en su sitio.`:'4 datos preparados. Revisa el duplicado.';
      lastInvoiceKey=key;
      }
    }
