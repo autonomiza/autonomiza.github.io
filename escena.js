@@ -11,7 +11,7 @@
  const names=[['Automatización','Diseño web','Asistentes de chat','Aplicaciones a medida','Inteligencia artificial','Agenda inteligente','Integraciones','Gestión de información'],['Un correo','Falta un dato','Copiar y pegar','¿Quién lo revisa?','Enviar otra vez','¿Qué quedó pendiente?'],['Entrada','Datos reunidos','Reglas claras','Tu revisión','Acción','Seguimiento'],['1 · Entender','2 · Acordar','3 · Probar','4 · Acompañar']];
  const captions=['Todo empieza en tu negocio.','Demasiados hilos sueltos.','De una cancelación a una cita confirmada.','Del documento a los datos. Con revisión humana.','Entender, acordar, probar y acompañar.','La tecnología conecta. El trato es personal.'];
  const descriptions=['Esfera de capacidades digitales con oficina, comercio, fábrica y taller en el centro.','Los mismos hilos se abren y cruzan entre tareas dispersas.','Ejemplo ficticio urgente: faltan menos de 6 horas; se avisa a tres personas a la vez y la primera que acepta obtiene la cita tras comprobar disponibilidad.','Ejemplo ficticio: llega una factura, se preparan sus datos y se señala un posible duplicado para revisión humana.','Las conexiones recorren cuatro pasos: entender tu trabajo, acordar el alcance, probar la solución y acompañarte.','El recorrido termina en el retrato original de Iván, junto a su presentación.'];
- let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0};
+ let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0},invoiceTokenWidths=[];
  const invoiceTokens=[...document.querySelectorAll('.invoice-token')];
  const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement(i===5?'a':'span');if(i===5){n.href='automatizacion-citas/';n.setAttribute('aria-label','Agenda inteligente: ver automatización de citas');}else{n.setAttribute('aria-hidden','true');}n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
  let w=0,h=0,anchors=[],readingEnds=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
@@ -125,6 +125,7 @@
    }
    const inbox=relative(document.querySelector('#demo-work .inbox-line')),paper=relative(document.querySelector('#demo-work .paper-document')),record=relative(document.querySelector('#demo-work .data-record'));
    invoiceOrigin=relative(document.querySelector('#demo-work'));
+   invoiceTokenWidths=invoiceTokens.map(el=>el.offsetWidth);
    const sources=[...document.querySelectorAll('.invoice-source')].map(relative),rows=[...document.querySelectorAll('.invoice-row')].map(relative),review=relative(document.querySelector('#demo-work .review-field')),stacked=mobile.matches&&!shortLandscape.matches;
    invoiceRoutes=Array.from({length:6},(_,i)=>{
      if(i===0){const A=[inbox.x+inbox.width*.7,inbox.y+inbox.height],B=[paper.x+paper.width*.5,paper.y];return[A,[A[0],A[1]+15],[B[0],B[1]-15],B];}
@@ -136,6 +137,17 @@
    measureScroll();
  }
  function measureScroll(){
+   if(mobile.matches&&!shortLandscape.matches){
+     const top=document.querySelector('header').offsetHeight,box=stage.getBoundingClientRect();
+     let clearance=0;
+     for(const chapter of chapters){
+       const heading=chapter.querySelector('h1,h2').getBoundingClientRect();
+       if(heading.bottom>top&&heading.top<box.bottom+12){
+         clearance=Math.max(clearance,clamp(box.bottom-heading.top+12,0,box.height));
+       }
+     }
+     stage.style.setProperty('--title-clearance',clearance.toFixed(1)+'px');
+   }else stage.style.setProperty('--title-clearance','0px');
    const y=scrollY;let index=0;while(index<anchors.length-2&&y>anchors[index+1])index++;
    const start=readingEnds.length?Math.min(readingEnds[index],anchors[index+1]-1):anchors[index];
    const progress=clamp((y-start)/(anchors[index+1]-start));
@@ -154,7 +166,9 @@
    window.renderDemonstration(p,ambient,paused,reduced.matches);
    const invoice=window.invoiceVisual,invoiceShown=p>=2.9&&p<=3.35;
    invoiceTokens.forEach((el,i)=>{const u=invoice?.progress[i]||0,show=invoiceShown&&u>0&&u<1&&!reduced.matches;
-     if(show){const q=point(3,i+1,smooth(u));el.style.transform=`translate(${(q[0]-invoiceOrigin.x).toFixed(1)}px,${(q[1]-invoiceOrigin.y).toFixed(1)}px) translate(-50%,-50%)`;}
+     if(show){const q=point(3,i+1,smooth(u)),half=invoiceTokenWidths[i]/2;
+       const x=mobile.matches&&!shortLandscape.matches?clamp(q[0]-invoiceOrigin.x,half+4,w-invoiceOrigin.x-half-4):q[0]-invoiceOrigin.x;
+       el.style.transform=`translate(${x.toFixed(1)}px,${(q[1]-invoiceOrigin.y).toFixed(1)}px) translate(-50%,-50%)`;}
      el.style.opacity=show?String(Math.min(1,u*8,(1-u)*8)):0;
    });
    const steps=lite?40:64,lines=[];
@@ -226,7 +240,7 @@
    if(!dirty&&p>=1)return;
    nodes.forEach((n,i)=>{
      const sa=a,sb=b,A=nodePoint(sa,i),B=nodePoint(sb,i),x=mix(A[0],B[0],t),y=mix(A[1],B[1],t);
-     const opacity=(p>1.5&&p<3.5)?0:labelPhase===3?(i<4?smooth(clamp((p-3.5)*2))*(1-smooth(clamp((p-4.25)*2))):0):(i<6?1-smooth(clamp(p-2)):1-smooth(clamp(p*2)));
+     const opacity=(p>1.5&&p<3.5)?0:labelPhase===3?(i<4?smooth(clamp((p-3.5)*2))*(1-smooth(clamp((p-4.25)*4))):0):(i<6?1-smooth(clamp(p-2)):1-smooth(clamp(p*2)));
      const shown=opacity*(p>1.4&&p<1.5?1-smooth(clamp((p-1.4)/.1)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';if(i===5){const active=labelPhase===0&&shown>.95;n.tabIndex=active?0:-1;n.setAttribute('aria-hidden',String(!active));n.style.pointerEvents=active?'auto':'none';if(active)n.setAttribute('href','automatizacion-citas/');else n.removeAttribute('href');}
      const energy=i===signalService?sourceEnergy:0;
      n.style.borderColor=energy>0?`rgba(46,196,182,${.29+energy*.65})`:'';
@@ -241,8 +255,8 @@
      icon.style.color=energy>0?`rgb(${Math.round(166+energy*76)},${Math.round(242+energy*13)},${Math.round(231+energy*21)})`:'';
      icon.style.strokeWidth=energy>0?(3+energy*.65).toFixed(2):'';
    });
-   founder.style.opacity=smooth(clamp((p-4.25)*1.6)).toFixed(3);
-   stage.style.setProperty('--portrait-reveal',smooth(clamp((p-4.25)*1.6)).toFixed(3));
+   founder.style.opacity=smooth(clamp((p-4.5)*2)).toFixed(3);
+   stage.style.setProperty('--portrait-reveal',smooth(clamp((p-4.5)*2)).toFixed(3));
    signature.style.opacity=smooth(clamp((p-4.5)*2)).toFixed(3);
    if(phase!==closest){caption.textContent=closest===6?'Cada paso encuentra su sitio.':captions[closest];scene.setAttribute('aria-label',closest===6?'Los hilos se ordenan: entrada, datos reunidos, reglas claras, revisión humana, acción y seguimiento.':descriptions[closest]);stage.dataset.phase=closest;phase=closest;}
    stage.style.setProperty('--threads-gather', 0);

@@ -40,3 +40,16 @@
  #demo-work .invoice-journey>span:nth-child(4){text-align:right}
 }
 @media(min-width:701px) and (max-height:760px){.opening h1{font-size:clamp(36px,6.2svh,47px)}}
+
+/* Editorial rhythm: keep each quoted reply together. */
+.opening h1{font-size:clamp(36px,3.5vw,52px);max-width:none}
+@media(max-width:700px) and (orientation:portrait){.opening h1{font-size:32px;line-height:1.15}}
+
+/* Local second review: readable headings and a persistent invoice record. */
+@media(max-width:700px) and (orientation:portrait){
+ .stage-wrap{clip-path:inset(0 0 var(--title-clearance,0px) 0)}
+ #demo-work .data-record{opacity:1!important}
+ #demo-work .paper-document{opacity:0!important;visibility:hidden}
+ #demo-work .data-record dl>div{min-height:19px;padding:2px 0}
+ #demo-work .record-source{font-size:8px;line-height:1.2}
+}

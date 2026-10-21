@@ -11,9 +11,11 @@
  ['Confirmando','Irene','Sí, me viene bien. ¡Gracias por avisarme!','Se comprueba que el hueco sigue disponible'],
  ['Irene S. · Confirmada','Irene','Tu cita queda confirmada hoy a las 16:00. ¡Hasta pronto!','Agenda actualizada · Equipo informado']
  ];
- let active=-1,start=0,lastStep=-1,lastInvoiceKey='';
+ const compactInvoice=matchMedia('(max-width:700px), (orientation:landscape) and (max-height:540px)');
+ let active=-1,start=0,lastStep=-1,lastInvoiceKey='',mobileInvoiceElapsed=0,lastTime=null;
  const clamp=v=>Math.max(0,Math.min(1,v));
  window.renderDemonstration=(phase,time,paused,reduced)=>{
+   const delta=lastTime===null?0:Math.min(.07,Math.max(0,time-lastTime));lastTime=time;
    const mode=phase>=1.5&&phase<2.5?0:phase>=2.5&&phase<3.5?1:-1;
    if(mode!==active){active=mode;start=time;lastStep=-1;}
    [web,work].forEach((el,i)=>{const centre=i+2,opacity=clamp((phase-(centre-.5))/(i===0?.32:.12))*clamp(((centre+.5)-phase)/.12);el.style.opacity=opacity.toFixed(3);el.style.visibility=opacity>.01?'visible':'hidden';el.style.transform=`translateY(${((1-opacity)*16).toFixed(1)}px)`;});
@@ -24,14 +26,21 @@
    if(phase<1.94){start=time;window.clinicVisualStep=0;}
    if(mode<0)return;
    if(mode===1&&phase<2.9)start=time;
-   // Leave each state long enough to read; the final result gets extra time.
-   const elapsed=(time-start)%26,step=mode===0?(reduced?4:elapsed<4?0:elapsed<8?1:elapsed<14?2:elapsed<19?3:4):(reduced?3:elapsed<3?0:elapsed<6?1:elapsed<14?2:3);
+   // On compact screens, keep the invoice's progress across scrolling and stop
+   // at the completed record. The appointment and desktop loops stay unchanged.
+   const compact=mode===1&&compactInvoice.matches;
+   if(compact){
+     if(reduced)mobileInvoiceElapsed=5;
+     else if(phase>=2.9&&!paused)mobileInvoiceElapsed=Math.min(5,mobileInvoiceElapsed+delta);
+   }
+   const elapsed=compact?mobileInvoiceElapsed:(time-start)%26;
+   const step=mode===0?(reduced?4:elapsed<4?0:elapsed<8?1:elapsed<14?2:elapsed<19?3:4):(reduced?3:compact?(elapsed<1.1?0:elapsed<2.2?1:elapsed<5?2:3):(elapsed<3?0:elapsed<6?1:elapsed<14?2:3));
    if(mode===1){
-     const progress=invoiceRows.map((row,i)=>reduced?1:clamp((elapsed-6.6-i*1.8)/1.4));
+     const progress=invoiceRows.map((row,i)=>reduced?1:compact?clamp((elapsed-2.2-i*.7)/.6):clamp((elapsed-6.6-i*1.8)/1.4));
      const count=progress.filter(x=>x>=1).length;
      window.invoiceVisual={elapsed,step,progress};
-     work.style.setProperty('--invoice-progress',reduced?'1':clamp(elapsed/19).toFixed(3));
-     work.style.setProperty('--scan',clamp((elapsed-3)/3).toFixed(3));
+     work.style.setProperty('--invoice-progress',reduced?'1':clamp(elapsed/(compact?5:19)).toFixed(3));
+     work.style.setProperty('--scan',clamp(compact?(elapsed-1.1)/1.1:(elapsed-3)/3).toFixed(3));
      const key=step+':'+count+':'+progress.findIndex(x=>x>0&&x<1);
      if(key!==lastInvoiceKey){
      invoiceRows.forEach((row,i)=>row.classList.toggle('is-filled',progress[i]>=1));
