@@ -1,7 +1,9 @@
 /* Illustrative sequences only. No forms, network calls or invented customer outcomes. */
 (()=>{
  const web=document.querySelector('#demo-web'),work=document.querySelector('#demo-work');
- const webText=web.querySelector('[data-web-outcome]'),workText=work.querySelector('[data-work-outcome]');
+ if(!work)return;
+ const standalone=document.body.classList.contains('invoice-service');
+ const webText=web?.querySelector('[data-web-outcome]'),workText=work.querySelector('[data-work-outcome]');
  const invoiceRows=[...work.querySelectorAll('.invoice-row')],invoiceSources=[...work.querySelectorAll('.invoice-source')],invoiceStages=[...work.querySelectorAll('.invoice-journey>span')],invoiceCount=work.querySelector('[data-invoice-count]');
  const messages=[['Se recuerda la cita por WhatsApp.','Un «no puedo ir» libera el hueco.','Menos de 6 horas: tres avisos a la vez.','Irene responde: «Sí, me viene bien».','La confirmación vuelve a la agenda.'],['El documento llega a tu correo.','Se recoge la información que contiene.','Los datos quedan preparados en un mismo lugar.','Un posible duplicado requiere revisión.']];
  const clinic=[
@@ -15,20 +17,20 @@
  let active=-1,start=0,lastStep=-1,lastInvoiceKey='',mobileInvoiceElapsed=0,lastTime=null;
  const clamp=v=>Math.max(0,Math.min(1,v));
  window.renderDemonstration=(phase,time,paused,reduced)=>{
-   const delta=lastTime===null?0:Math.min(.07,Math.max(0,time-lastTime));lastTime=time;
+   const delta=lastTime===null?0:Math.min(standalone?1:.07,Math.max(0,time-lastTime));lastTime=time;
    const mode=phase>=1.5&&phase<2.5?0:phase>=2.5&&phase<3.5?1:-1;
    if(mode!==active){active=mode;start=time;lastStep=-1;}
-   [web,work].forEach((el,i)=>{const centre=i+2,opacity=clamp((phase-(centre-.5))/(i===0?.32:.12))*clamp(((centre+.5)-phase)/.12);el.style.opacity=opacity.toFixed(3);el.style.visibility=opacity>.01?'visible':'hidden';el.style.transform=`translateY(${((1-opacity)*16).toFixed(1)}px)`;});
+   [web,work].forEach((el,i)=>{if(!el)return;const centre=i+2,opacity=clamp((phase-(centre-.5))/(i===0?.32:.12))*clamp(((centre+.5)-phase)/.12);el.style.opacity=opacity.toFixed(3);el.style.visibility=opacity>.01?'visible':'hidden';el.style.transform=`translateY(${((1-opacity)*16).toFixed(1)}px)`;});
    // Let the physical connection arrive before starting the message sequence.
    const calendarReveal=clamp((phase-1.50)/.38),chatReveal=clamp((phase-1.78)/.16);
-   web.style.setProperty('--calendar-reveal',calendarReveal.toFixed(3));
-   web.style.setProperty('--chat-reveal',chatReveal.toFixed(3));
+   if(web){web.style.setProperty('--calendar-reveal',calendarReveal.toFixed(3));
+   web.style.setProperty('--chat-reveal',chatReveal.toFixed(3));}
    if(phase<1.94){start=time;window.clinicVisualStep=0;}
    if(mode<0)return;
    if(mode===1&&phase<2.9)start=time;
    // On compact screens, keep the invoice's progress across scrolling and stop
    // at the completed record. The appointment and desktop loops stay unchanged.
-   const compact=mode===1&&compactInvoice.matches;
+   const compact=mode===1&&(standalone||compactInvoice.matches);
    if(compact){
      if(reduced)mobileInvoiceElapsed=5;
      else if(phase>=2.9&&!paused)mobileInvoiceElapsed=Math.min(5,mobileInvoiceElapsed+delta);

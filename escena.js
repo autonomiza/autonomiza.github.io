@@ -13,7 +13,7 @@
  const descriptions=['Esfera de capacidades digitales con oficina, comercio, fábrica y taller en el centro.','Los mismos hilos se abren y cruzan entre tareas dispersas.','Ejemplo ficticio urgente: faltan menos de 6 horas; se avisa a tres personas a la vez y la primera que acepta obtiene la cita tras comprobar disponibilidad.','Ejemplo ficticio: llega una factura, se preparan sus datos y se señala un posible duplicado para revisión humana.','Las conexiones recorren cuatro pasos: entender tu trabajo, acordar el alcance, probar la solución y acompañarte.','El recorrido termina en el retrato original de Iván, junto a su presentación.'];
  let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0},invoiceTokenWidths=[];
  const invoiceTokens=[...document.querySelectorAll('.invoice-token')];
- const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement(i===5?'a':'span');if(i===5){n.href='automatizacion-citas/';n.setAttribute('aria-label','Agenda inteligente: ver automatización de citas');}else{n.setAttribute('aria-hidden','true');}n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
+ const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement(i===5||i===7?'a':'span');if(i===5||i===7){n.href=i===5?'automatizacion-citas/':'automatizacion-facturas/';n.setAttribute('aria-label',i===5?'Agenda inteligente: ver automatización de citas':'Gestión de información: ver automatización de facturas');}else{n.setAttribute('aria-hidden','true');}n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
  let w=0,h=0,anchors=[],readingEnds=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t),TAU=Math.PI*2;
  const ordered=[[.23,.22],[.75,.22],[.75,.50],[.23,.50],[.23,.78],[.75,.78]];
@@ -49,14 +49,31 @@
    const u=smooth(clamp(first?(p-1)/.4:(p-1.4)/.54));
    return[mix(A[0],B[0],u),mix(A[1],B[1],u)];
  }
+ let servicePositions=[];
+ function spherePosition(i){
+   const time=reduced.matches?0:ambient,angle=-Math.PI/2+i*TAU/names[0].length+time*TAU/110;
+   const halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
+   const rx=mobile.matches?w*.49:Math.min(w*.42,w/2-12),ry=h*.43;
+   return[clamp(w*.5+Math.cos(angle)*rx,halfWidth+6,w-halfWidth-6),clamp(h*.5+Math.sin(angle)*ry,halfHeight+8,h-halfHeight-8)];
+ }
+ function spaceTouchLabels(){
+   servicePositions=names[0].map((_,i)=>spherePosition(i));
+   if(!mobile.matches)return;
+   // Keep the orbit and its eight names, separating the larger touch buttons
+   // from adjacent labels without changing the scene's size or reading layout.
+   for(let pass=0;pass<16;pass++)for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){
+     const A=servicePositions[i],B=servicePositions[j],dx=B[0]-A[0],dy=B[1]-A[1];
+     const overlapX=(widths[i]+widths[j])/2+5-Math.abs(dx),overlapY=(labelHeights[i]+labelHeights[j])/2+5-Math.abs(dy);
+     if(overlapX<=0||overlapY<=0)continue;
+     const axis=overlapX<overlapY?0:1,overlap=axis===0?overlapX:overlapY,sign=(axis===0?dx:dy)>=0?1:-1;
+     A[axis]-=sign*(overlap/2+.1);B[axis]+=sign*(overlap/2+.1);
+     for(const k of [i,j]){servicePositions[k][0]=clamp(servicePositions[k][0],widths[k]/2+6,w-widths[k]/2-6);servicePositions[k][1]=clamp(servicePositions[k][1],labelHeights[k]/2+8,h-labelHeights[k]/2-8);}
+   }
+ }
  function nodePoint(state,i){
    if(state>=4){const n=methodSteps[i%4];return[n[0]*w,n[1]*h];}
    if(state===0){
-     // Names orbit as upright labels; the same points anchor their connecting threads.
-     const time=reduced.matches?0:ambient,angle=-Math.PI/2+i*TAU/names[0].length+time*TAU/110;
-     const halfWidth=(widths[i]||100)/2,halfHeight=(labelHeights[i]||28)/2;
-     const rx=mobile.matches?w*.49:Math.min(w*.42,w/2-12),ry=h*.43;
-     return[clamp(w*.5+Math.cos(angle)*rx,halfWidth+6,w-halfWidth-6),clamp(h*.5+Math.sin(angle)*ry,halfHeight+8,h-halfHeight-8)];
+     return servicePositions[i]||spherePosition(i);
    }
    const list=state===1?tangled:ordered,n=list[i%6];return[n[0]*w,n[1]*h];
  }
@@ -96,7 +113,7 @@
      move(dot);if(!positions.has(dot))continue;dot.addEventListener('animationiteration',()=>{move(dot);excludeSphere();});twinkleLayer.append(dot);
    }
  }
- function syncTwinkles(){twinkleLayer.dataset.paused=String(paused||document.hidden||reduced.matches);}
+ function syncTwinkles(){twinkleLayer.dataset.paused=String(paused||interactionHolds.size>0||document.hidden||reduced.matches);}
  function measure(){
    w=scene.clientWidth;h=scene.clientHeight;labelState=-1;excludeSphere();placeTwinkles();
    // Follow the sphere's radius on desktop; measure only when layout changes.
@@ -153,6 +170,7 @@
    const progress=clamp((y-start)/(anchors[index+1]-start));
    p=mix(chapterPhases[index],chapterPhases[index+1],progress);
    if(reduced.matches)p=chapterPhases[index+(progress>=.5?1:0)];
+   if(p>=.5&&interactionHolds.size){interactionHolds.clear();syncTwinkles();last=0;}
    excludeSphere();
    dirty=true;wake();
  }
@@ -160,7 +178,17 @@
    const gp=p<1?p:p<1.4?1+(p-1)/.4:p<1.94?2:p<2.35?2:p<2.9?2+(p-2.35)/.55:p<3.35?3:p<4?3+(p-3.35)/.65:p;
    const a=Math.floor(gp),b=Math.min(5,a+1),t=smooth(gp-a),closest=p>=1.2&&p<1.5?6:Math.round(p);
    const labelPhase=p<.5?0:p<1.2?1:p<3.5?2:3;
+   // Restore link sizing before measuring when returning from another chapter.
+   // This keeps the 44px rectangles in collision calculations on every visit.
+   for(const i of [5,7]){
+     const active=labelPhase===0&&(i===5||1-smooth(clamp(p*2))>.95),n=nodes[i];
+     if(n.hasAttribute('href')!==active){
+       if(active)n.setAttribute('href',i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');
+       labelState=-1;
+     }
+   }
    if(labelPhase!==labelState){nodes.forEach((n,i)=>{n.textContent=names[labelPhase][i]||'';n.classList.toggle('review',labelPhase===2&&i===3);n.classList.toggle('method-step',labelPhase===3);});labelState=labelPhase;widths=nodes.map(n=>n.offsetWidth);labelHeights=nodes.map(n=>n.offsetHeight);}
+   if(p<1)spaceTouchLabels();
    ctx.clearRect(0,0,w,h);
    const demoOpacity=Math.max(clamp((p-1.5)*2)*clamp((3.5-p)*2),0);ctx.globalAlpha=p>=1&&p<=2.35?.95:p>=2.75&&p<=3.25?.85:1-demoOpacity*.8;
    window.renderDemonstration(p,ambient,paused,reduced.matches);
@@ -241,7 +269,7 @@
    nodes.forEach((n,i)=>{
      const sa=a,sb=b,A=nodePoint(sa,i),B=nodePoint(sb,i),x=mix(A[0],B[0],t),y=mix(A[1],B[1],t);
      const opacity=(p>1.5&&p<3.5)?0:labelPhase===3?(i<4?smooth(clamp((p-3.5)*2))*(1-smooth(clamp((p-4.25)*4))):0):(i<6?1-smooth(clamp(p-2)):1-smooth(clamp(p*2)));
-     const shown=opacity*(p>1.4&&p<1.5?1-smooth(clamp((p-1.4)/.1)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';if(i===5){const active=labelPhase===0&&shown>.95;n.tabIndex=active?0:-1;n.setAttribute('aria-hidden',String(!active));n.style.pointerEvents=active?'auto':'none';if(active)n.setAttribute('href','automatizacion-citas/');else n.removeAttribute('href');}
+     const shown=opacity*(p>1.4&&p<1.5?1-smooth(clamp((p-1.4)/.1)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';if(i===5||i===7){const active=labelPhase===0&&shown>.95;n.tabIndex=active?0:-1;n.setAttribute('aria-hidden',String(!active));n.style.pointerEvents=active?'auto':'none';if(active)n.setAttribute('href',i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');}
      const energy=i===signalService?sourceEnergy:0;
      n.style.borderColor=energy>0?`rgba(46,196,182,${.29+energy*.65})`:'';
      n.style.backgroundColor=energy>0?`rgba(${Math.round(28+energy*5)},${Math.round(41+energy*28)},${Math.round(43+energy*24)},.90)`:'';
@@ -270,15 +298,19 @@
  }
  function wake(){if(!raf&&visible&&!document.hidden)raf=requestAnimationFrame(tick);}
  const interactionHolds=new Set();
- function holdNames(reason,hold){if(hold)interactionHolds.add(reason);else interactionHolds.delete(reason);dirty=true;last=0;wake();}
- const serviceLink=nodes[5];
- serviceLink.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse')holdNames('hover',true);});
- serviceLink.addEventListener('pointerleave',()=>holdNames('hover',false));
- serviceLink.addEventListener('focus',()=>holdNames('focus',true));
- serviceLink.addEventListener('blur',()=>holdNames('focus',false));
- serviceLink.addEventListener('pointerdown',()=>holdNames('press',true));
+ function holdNames(reason,hold){if(hold)interactionHolds.add(reason);else interactionHolds.delete(reason);syncTwinkles();dirty=true;last=0;wake();}
+ // Pause only while targeting an available service link, never the scene itself.
+ const serviceLink=target=>target?.closest?.('.scene-nodes a.node[href]');
+ nodes.filter(node=>node.tagName==='A').forEach(node=>{
+   node.addEventListener('pointerenter',event=>{if(event.pointerType==='mouse'&&p<.5&&node.hasAttribute('href'))holdNames('hover',true);});
+   node.addEventListener('pointerleave',()=>holdNames('hover',false));
+   node.addEventListener('focusin',()=>{if(p<.5&&node.hasAttribute('href'))holdNames('focus',true);});
+   node.addEventListener('focusout',event=>{if(!serviceLink(event.relatedTarget))holdNames('focus',false);});
+   node.addEventListener('pointerdown',event=>{if(p<.5&&node.hasAttribute('href'))holdNames(event.pointerType==='touch'?'touch':'press',true);},{passive:true});
+ });
+ document.addEventListener('pointerdown',event=>{if(!serviceLink(event.target))holdNames('touch',false);},{passive:true});
  addEventListener('pointerup',()=>holdNames('press',false));
- addEventListener('pointercancel',()=>holdNames('press',false));
+ addEventListener('pointercancel',()=>{holdNames('press',false);holdNames('touch',false);});
  pause.addEventListener('click',()=>{paused=!paused;syncTwinkles();stage.dataset.paused=String(paused);pause.setAttribute('aria-pressed',String(paused));pause.textContent=paused?'Reanudar movimiento':'Pausar movimiento';dirty=true;last=0;wake();});
  function motionPreference(){syncTwinkles();pause.hidden=reduced.matches;dirty=true;measureScroll();}
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(!visible){cancelAnimationFrame(raf);raf=0;last=0;}else{dirty=true;wake();}},{threshold:0}).observe(stage);

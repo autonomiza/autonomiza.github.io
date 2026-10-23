@@ -1,0 +1,18 @@
+/* Match the appointment page, with the requested video first. */
+.invoice-service .service-video{padding-top:0;border-top:0}
+.invoice-service .service-video h1{max-width:18ch;margin-bottom:18px}
+.invoice-service .service-video details li{margin:12px 0}
+
+.invoice-service .invoice-video-intro{margin:0 0 14px}
+.invoice-service .service-video figure{margin-top:16px}
+.invoice-process{align-items:start}
+.invoice-register{min-width:0;margin:0}
+.invoice-register img{display:block;width:100%;height:auto;border:1px solid #2ec4b64a;border-radius:5px}
+.invoice-register figcaption{font-size:12px;line-height:1.75;color:var(--muted);margin-top:14px}
+@media(max-width:700px){
+ .invoice-service .service-back{margin-bottom:16px}
+ .invoice-service .service-video>.intro-line{margin-top:0;margin-bottom:8px}
+ .invoice-service .service-video h1{font-size:32px;max-width:none;margin:8px 0 12px}
+ .invoice-service .invoice-video-intro{font-size:13px;line-height:1.5;margin-bottom:12px}
+ .invoice-service .service-video figure{margin-top:12px}
+}

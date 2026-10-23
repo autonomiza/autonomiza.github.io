@@ -4,3 +4,21 @@
 .scene-nodes a.node[href]:before{display:none}.scene-nodes a.node[href]:after{content:"";display:inline-block;width:15px;height:18px;border-radius:0;margin-left:7px;vertical-align:-4px;background:currentColor;mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2026%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2015V6a2%202%200%200%201%204%200v6-2a2%202%200%200%201%204%200v2-1a2%202%200%200%201%204%200v5c0%204-2%207-6%207h-2c-2%200-3-1-4-3l-4-5a2%202%200%200%201%203-2l1%202Z%22%2F%3E%3Cpath%20d%3D%22M3%203l2%202M10%200v2M17%203l-2%202%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat;-webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2026%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.65%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2015V6a2%202%200%200%201%204%200v6-2a2%202%200%200%201%204%200v2-1a2%202%200%200%201%204%200v5c0%204-2%207-6%207h-2c-2%200-3-1-4-3l-4-5a2%202%200%200%201%203-2l1%202Z%22%2F%3E%3Cpath%20d%3D%22M3%203l2%202M10%200v2M17%203l-2%202%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat}.scene-nodes a.node[href]:hover{box-shadow:0 0 14px #2ec4b62b}.scene-nodes a.node[href]:focus-visible{outline:2px solid var(--ice);outline-offset:4px}
 
 .service-video figure{margin:26px 0 0}.service-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#090b0c;border:1px solid #2ec4b64a;border-radius:5px}.service-video figcaption{font-size:12px;line-height:1.75;color:var(--muted);padding:14px 0 18px;max-width:85ch}.service-video .video-mobile-hint{font-size:12px;margin-top:18px}.service-video details{max-width:850px}.service-video details summary{padding-top:18px;padding-bottom:18px}
+
+/* Match the other labels' typography; permanent capsule light marks the links.
+   The transparent link retains its 44px touch target. */
+.scene-nodes .node{cursor:default}
+.scene-nodes a.node[href]{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:9px 13px;color:var(--ice);background:transparent!important;border-color:transparent!important;font-family:inherit;font-weight:inherit;text-decoration:none;cursor:pointer;touch-action:manipulation;box-shadow:none}
+.scene-nodes a.node[href]:before{content:'';display:block;position:absolute;inset:5px 0;width:auto;height:auto;margin:0;border:1px solid #2ec4b6;border-radius:30px;background:#1c292bf2;box-shadow:0 0 10px #2ec4b64d,inset 0 0 7px #2ec4b61f;z-index:-1}
+.scene-nodes a.node[href]:after{display:inline-block;flex-shrink:0}
+.scene-nodes a.node[href]:hover{color:var(--ice);text-decoration:none;box-shadow:none}
+.scene-nodes a.node[href]:hover:before,.scene-nodes a.node[href]:focus-visible:before{border-color:#2ec4b6;background:#244a48}
+.scene-nodes a.node[href]:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:700px){.scene-nodes a.node[href]{padding:6px 8px;font-size:9px}}
+@media(max-width:700px){.scene-nodes a.node[href]:before{inset:9px 0}}
+.service-page .primary:focus-visible,.error-page .text-link:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.service-back{min-height:44px;display:inline-flex;align-items:center}
+.error-page main{min-height:calc(100svh - 95px);display:flex;align-items:center}
+.error-page .service-hero{width:100%;padding-bottom:20px}
+.error-symbol{display:flex;align-items:center;justify-content:center;min-height:180px}
+.error-symbol img{width:158px;height:134px}
