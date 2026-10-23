@@ -18,8 +18,8 @@
   function link(text,href,cls='ac-link',external=false){const n=el('a',cls,text);n.href=href;if(external){n.target='_blank';n.rel='noopener noreferrer';}return n;}
   function avatar(){const frame=el('span','ac-face'),n=el('img','ac-avatar');n.src='/assets/ivan-recortado.webp';n.alt='';n.width=32;n.height=32;frame.append(n);return frame;}
   const root=el('div');root.id='autonomiza-contact';
-  const launcher=button('',openChat,'ac-launcher');launcher.append(avatar(),el('span','ac-launch-label','Hablar con Iván'));
-  launcher.setAttribute('aria-label','Hablar con Iván');launcher.setAttribute('aria-haspopup','dialog');launcher.setAttribute('aria-controls','ac-dialog');launcher.setAttribute('aria-expanded','false');
+  const launcher=button('',openChat,'ac-launcher');launcher.append(avatar(),el('span','ac-launch-label','Habla con Iván'));
+  launcher.setAttribute('aria-label','Habla con Iván');launcher.setAttribute('aria-haspopup','dialog');launcher.setAttribute('aria-controls','ac-dialog');launcher.setAttribute('aria-expanded','false');
   const outside=el('div','ac-launch-area');outside.id='autonomiza-chat-launch';outside.append(launcher);
   const dialog=el('dialog','ac-dialog');dialog.id='ac-dialog';dialog.setAttribute('aria-labelledby','ac-title');
   const top=el('div','ac-top'),identity=el('div','ac-identity'),title=el('h2','','Iván · Autonomiza');title.id='ac-title';
