@@ -138,7 +138,7 @@
     const channel=answer.canal==='whatsapp'?`WhatsApp, al ${answer.telefono}`:`correo, a ${answer.correo}`;
     return intro+`Te contesto yo, en persona, normalmente en unas horas, como mucho al día siguiente, por ${channel}. Si no quieres esperar, reserva directamente una videollamada de 20 min.`;
   }
-  function render(){
+  function render(serverError=''){
     if(submitted)return;generation++;busy=true;history();confirm.replaceChildren();content.replaceChildren();error.textContent='';composer.hidden=true;
     next.disabled=false;next.className='ac-send';next.textContent='↑';next.setAttribute('aria-label','Enviar respuesta');composer.append(next);
     function ask(){later(step===5?summary():question(step),({p})=>{
@@ -148,12 +148,12 @@
       if(step===2)inputField('nombre','input','text',2,60,'Tu nombre','name');
       if(step===3)choice(CHANNELS,'canal');
       if(step===4)inputField(answer.canal==='whatsapp'?'telefono':'correo','input',answer.canal==='whatsapp'?'tel':'email',answer.canal==='whatsapp'?6:1,answer.canal==='whatsapp'?25:120,answer.canal==='whatsapp'?'+34 600 000 000':'nombre@ejemplo.com',answer.canal==='whatsapp'?'tel':'email');
-      if(step===5)privacy();focusQuestion();
+      if(step===5)privacy();focusQuestion();if(serverError)invalid(serverError);
     });}
     if(!greeted)later('Hola 👋 Te hago 4 preguntas rápidas y te contesto yo en persona.',()=>{greeted=true;ask();},'ac-greeting');else ask();
   }
   function invalid(message) {
-    error.textContent=message;const input=form.querySelector('[data-field]');if(input){input.setAttribute('aria-invalid','true');input.focus();}
+    error.textContent=message;const input=form.querySelector('[data-field]');if(input){input.setAttribute('aria-invalid','true');if(dialog.open)input.focus();}
     return false;
   }
   function valid() {
@@ -184,6 +184,16 @@
       busy=false;if(dialog.open){p.focus({preventScroll:true});bottom();}
     });
   }
+  function correct400(data){
+    // A validation rejection is safe to correct; never retry automatically.
+    const steps={negocio:0,tarea:1,nombre:2,canal:3,telefono:4,correo:4,acepta:5};
+    const fields=Array.isArray(data?.campos)?data.campos:[];
+    const positions=fields.filter(key=>typeof key==='string'&&Object.hasOwn(steps,key)).map(key=>steps[key]);
+    step=positions.length?Math.min(...positions):5;
+    submitted=false;busy=false;result=null;answer.acepta=false;
+    const message=typeof data?.error==='string'&&data.error.trim()?data.error:'Revisa tus respuestas y vuelve a confirmar el envío.';
+    render(message);
+  }
   async function send() {
     if(submitted)return;
     const elapsed=Math.max(0,Date.now()-openedAt);
@@ -201,7 +211,9 @@
       const data=await response.json();
       if(response.status===200&&data.ok===true&&typeof data.mensaje==='string'&&data.mensaje.trim()){
         showResult('success',data.mensaje,bookingUrl(data.reservar));
-      }else if(response.status===400||response.status===429){
+      }else if(response.status===400){
+        correct400(data);
+      }else if(response.status===429){
         const names={negocio:'tipo de negocio',tarea:'tarea',nombre:'nombre',canal:'canal de respuesta',telefono:'teléfono',correo:'correo',acepta:'aceptación de privacidad'};
         const fields=Array.isArray(data.campos)?data.campos.filter(k=>Object.hasOwn(names,k)).map(k=>names[k]):[];
         showResult('error',typeof data.error==='string'?data.error:'Revisa tus datos o contacta conmigo por WhatsApp.',null,fields);
