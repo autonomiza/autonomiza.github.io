@@ -58,7 +58,7 @@
   }else root.append(outside);
   const triggers=[launcher];
   for(const a of document.querySelectorAll('a')){
-    if(/^(Cuéntame qué te frena|Cuéntame tu caso)(?:\s|$)/.test(a.textContent.trim())){
+    if(a.hasAttribute('data-autonomiza-chat')||/^(Cuéntame qué te frena|Cuéntame tu caso)(?:\s|$)/.test(a.textContent.trim())){
       a.addEventListener('click',event=>{event.preventDefault();openChat(event);});
       a.setAttribute('aria-haspopup','dialog');a.setAttribute('aria-controls','ac-dialog');a.setAttribute('aria-expanded','false');triggers.push(a);
     }

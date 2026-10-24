@@ -13,7 +13,7 @@
  const descriptions=['Esfera de capacidades digitales con oficina, comercio, fábrica y taller en el centro.','Los mismos hilos se abren y cruzan entre tareas dispersas.','Ejemplo ficticio urgente: faltan menos de 6 horas; se avisa a tres personas a la vez y la primera que acepta obtiene la cita tras comprobar disponibilidad.','Ejemplo ficticio: llega una factura, se preparan sus datos y se señala un posible duplicado para revisión humana.','Las conexiones recorren cuatro pasos: entender tu trabajo, acordar el alcance, probar la solución y acompañarte.','El recorrido termina en el retrato original de Iván, junto a su presentación.'];
  let businessSize=64,widths=[],labelHeights=[],clinicRoutes=[],clinicMainRoutes=[],invoiceRoutes=[],invoiceOrigin={x:0,y:0},invoiceTokenWidths=[];
  const invoiceTokens=[...document.querySelectorAll('.invoice-token')];
- const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement(i===5||i===7?'a':'span');if(i===5||i===7){n.href=i===5?'automatizacion-citas/':'automatizacion-facturas/';n.setAttribute('aria-label',i===5?'Agenda inteligente: ver automatización de citas':'Gestión de información: ver automatización de facturas');}else{n.setAttribute('aria-hidden','true');}n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
+ const nodes=Array.from({length:Math.max(...names.map(group=>group.length))},(_,i)=>{const n=document.createElement(i===2||i===5||i===7?'a':'span');if(i===2||i===5||i===7){n.href=i===2?'respuesta-inmediata/':i===5?'automatizacion-citas/':'automatizacion-facturas/';n.setAttribute('aria-label',i===2?'Asistentes de chat: ver respuesta inmediata':i===5?'Agenda inteligente: ver automatización de citas':'Gestión de información: ver automatización de facturas');}else{n.setAttribute('aria-hidden','true');}n.className='node';n.textContent=names[0][i];nodeLayer.append(n);return n;});
  let w=0,h=0,anchors=[],readingEnds=[],p=0,ambient=0,paused=false,visible=true,raf=0,last=0,dirty=true,labelState=-1,phase=-1,slow=0,lite=(navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4;
  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),mix=(a,b,t)=>a+(b-a)*t,smooth=t=>t*t*(3-2*t),TAU=Math.PI*2;
  const ordered=[[.23,.22],[.75,.22],[.75,.50],[.23,.50],[.23,.78],[.75,.78]];
@@ -180,10 +180,10 @@
    const labelPhase=p<.5?0:p<1.2?1:p<3.5?2:3;
    // Restore link sizing before measuring when returning from another chapter.
    // This keeps the 44px rectangles in collision calculations on every visit.
-   for(const i of [5,7]){
+   for(const i of [2,5,7]){
      const active=labelPhase===0&&(i===5||1-smooth(clamp(p*2))>.95),n=nodes[i];
      if(n.hasAttribute('href')!==active){
-       if(active)n.setAttribute('href',i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');
+       if(active)n.setAttribute('href',i===2?'respuesta-inmediata/':i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');
        labelState=-1;
      }
    }
@@ -269,7 +269,7 @@
    nodes.forEach((n,i)=>{
      const sa=a,sb=b,A=nodePoint(sa,i),B=nodePoint(sb,i),x=mix(A[0],B[0],t),y=mix(A[1],B[1],t);
      const opacity=(p>1.5&&p<3.5)?0:labelPhase===3?(i<4?smooth(clamp((p-3.5)*2))*(1-smooth(clamp((p-4.25)*4))):0):(i<6?1-smooth(clamp(p-2)):1-smooth(clamp(p*2)));
-     const shown=opacity*(p>1.4&&p<1.5?1-smooth(clamp((p-1.4)/.1)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';if(i===5||i===7){const active=labelPhase===0&&shown>.95;n.tabIndex=active?0:-1;n.setAttribute('aria-hidden',String(!active));n.style.pointerEvents=active?'auto':'none';if(active)n.setAttribute('href',i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');}
+     const shown=opacity*(p>1.4&&p<1.5?1-smooth(clamp((p-1.4)/.1)):1);n.style.opacity=shown.toFixed(3);n.style.visibility=shown<.01?'hidden':'visible';if(i===2||i===5||i===7){const active=labelPhase===0&&shown>.95;n.tabIndex=active?0:-1;n.setAttribute('aria-hidden',String(!active));n.style.pointerEvents=active?'auto':'none';if(active)n.setAttribute('href',i===2?'respuesta-inmediata/':i===5?'automatizacion-citas/':'automatizacion-facturas/');else n.removeAttribute('href');}
      const energy=i===signalService?sourceEnergy:0;
      n.style.borderColor=energy>0?`rgba(46,196,182,${.29+energy*.65})`:'';
      n.style.backgroundColor=energy>0?`rgba(${Math.round(28+energy*5)},${Math.round(41+energy*28)},${Math.round(43+energy*24)},.90)`:'';
