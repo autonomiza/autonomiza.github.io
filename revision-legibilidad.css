@@ -1,0 +1,17 @@
+/* Scoped to the four reviewed pages; no chat or backend changes. */
+body>header,body>header.ac-contact-header{background-color:#1c1c1e;background-image:none;opacity:1;backdrop-filter:none}
+@media(max-width:700px){
+ body:not(.service-page) .opening .hero-note{font-size:12px;line-height:1.7}
+ body:not(.service-page) .chapter .intro-line,
+ body:not(.service-page) .service-next span,
+ body:not(.service-page) .service-signature b{font-size:12px}
+ body:not(.service-page) .chapter small{font-size:12px;line-height:1.75}
+ body:not(.service-page) .chapter .missed-appointments small{font-size:12px;line-height:1.75}
+ body:not(.service-page) .chapter .missed-appointments .example-equation{font-size:12px;line-height:1.6}
+ body:not(.service-page) .viva-card-top{font-size:12px;line-height:1.25;letter-spacing:0}
+ body:not(.service-page) .hero-demo{grid-template-rows:15px minmax(28px,1fr) 32px 17px}
+ body:not(.service-page) .viva-card-top .viva-open{position:absolute;right:7px;bottom:7px}
+ body:not(.service-page) .viva-link i{visibility:hidden}
+ body:not(.service-page) .demo-context>span:last-child,
+ body:not(.service-page) .reply-top>span:last-child{font-size:12px;line-height:1.3;flex-shrink:0}
+}

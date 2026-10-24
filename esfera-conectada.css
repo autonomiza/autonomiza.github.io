@@ -1,0 +1,32 @@
+/* The sphere feeds the three existing service stories. */
+.opening{isolation:isolate}.hero-upper,.examples-head,.example-grid{position:relative;z-index:2}.sphere-feeds{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:3}.sphere-feeds path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}.sphere-feed-base{stroke-width:1;opacity:.38}.sphere-feed-trail{stroke-width:2;opacity:.85;filter:drop-shadow(0 0 4px currentColor)}.sphere-feed-dot{filter:drop-shadow(0 0 4px currentColor)}.sphere-feed-port{stroke-width:1;fill:#0b1617}.example-grid{margin-top:54px}.examples-head{max-width:62%;margin:28px 0 0;align-items:flex-start}.examples-head>div{max-width:calc(100% - 115px)}.examples-head button{flex:0 0 100px;text-align:right}.example-card:after{content:'';position:absolute;inset:-1px;border:1px solid rgba(var(--rgb),var(--arrival,0));box-shadow:0 0 22px rgba(var(--rgb),calc(var(--arrival,0)*.18));border-radius:inherit;pointer-events:none}.example-card{transform:none!important}
+.business-core{overflow:visible;isolation:isolate;animation:core-alive 7s ease-in-out infinite}.business-core:before{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,transparent 10%,#75eece80 24%,transparent 39%,#85caf580 61%,transparent 74%,#e9c58570 88%,transparent);padding:2px;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;z-index:-1;animation:core-current 24s linear infinite}.business-core:after{content:'';position:absolute;inset:4px;border-radius:50%;background:radial-gradient(ellipse at 30% 20%,#75eece13,transparent 65%);pointer-events:none;z-index:-1}.business-core>span,.business-core strong,.business-core i{position:relative;z-index:1}.map-orbit{border-color:#75eece5c;animation:orbit-one 28s linear infinite}.orbit-b{border-color:#e9c58545;animation:orbit-two 37s linear infinite reverse}.orbit-c{border-color:#85caf551;animation:orbit-three 43s linear infinite}.sphere-satellites{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3}.sphere-satellites circle{filter:drop-shadow(0 0 4px currentColor)}
+@keyframes core-alive{0%,100%{box-shadow:0 0 0 10px #75eece04,0 0 40px #75eece0c}50%{box-shadow:0 0 0 14px #75eece08,0 0 70px #75eece21}}
+@keyframes core-current{to{rotate:360deg}}
+@keyframes orbit-one{0%{transform:translate(-50%,-50%) rotate(-28deg) scaleY(.63)}50%{transform:translate(-50%,-50%) rotate(152deg) scaleY(.78)}100%{transform:translate(-50%,-50%) rotate(332deg) scaleY(.63)}}
+@keyframes orbit-two{0%{transform:translate(-50%,-50%) rotate(36deg) scaleY(.85)}50%{transform:translate(-50%,-50%) rotate(216deg) scaleY(.55)}100%{transform:translate(-50%,-50%) rotate(396deg) scaleY(.85)}}
+@keyframes orbit-three{0%{transform:translate(-50%,-50%) rotate(95deg) scaleY(.7)}50%{transform:translate(-50%,-50%) rotate(275deg) scaleY(.48)}100%{transform:translate(-50%,-50%) rotate(455deg) scaleY(.7)}}
+@media(max-width:800px){.examples-head{max-width:78%;display:block;margin-top:30px}.examples-head>div{max-width:100%}.examples-head button{width:auto;min-height:40px;text-align:left;margin-top:5px}.example-grid{margin-top:52px}}
+@media(max-width:520px){.examples-head{max-width:80%;margin-top:30px}.examples-head p{max-width:none}.example-grid{margin-top:46px}.sphere-feed-base{opacity:.42}.sphere-feed-trail{stroke-width:1.6}}
+@media(prefers-reduced-motion:reduce){.sphere-feed-trail,.sphere-feed-dot,.sphere-satellites{display:none}.business-core,.business-core:before,.map-orbit{animation:none!important}.example-card:after{display:none}}
+.motion-paused .business-core:before{animation-play-state:paused}
+
+
+/* One pulse delivers an action, then rests. No ambient dotted conveyor. */
+.sphere-feed-trail{stroke-width:2.6;opacity:0;filter:drop-shadow(0 0 3px currentColor) drop-shadow(0 0 7px currentColor)}
+.route-svg .route-signal{stroke-width:2.5;stroke-linecap:round;opacity:0;filter:drop-shadow(0 0 5px currentColor)}
+.route-common-signal,.route-signal-branch{display:none}
+.story-wires .signal-trail,.cinema-threads .signal-trail{stroke:var(--tone);stroke-width:2.4;stroke-linecap:round;fill:none;opacity:0;filter:drop-shadow(0 0 5px var(--tone))}
+.story-wires .explain-feed{opacity:0;stroke-width:1}
+.chapter-port{box-shadow:0 0 22px rgba(var(--rgb),calc(var(--chapter-arrival,0)*.28));transition:box-shadow .4s}
+.story-step{background:rgba(var(--rgb),calc(var(--signal-received,0)*.09))}
+.cinema-shell{box-shadow:0 0 0 1px rgba(var(--rgb),calc(var(--signal-arrival,0)*.55)),0 0 32px rgba(var(--rgb),calc(var(--signal-arrival,0)*.10))}
+.example-card .viva-mini{filter:drop-shadow(0 0 8px rgba(var(--rgb),calc(var(--arrival,0)*.2)))}
+@media(prefers-reduced-motion:reduce){.route-signal,.signal-trail{display:none!important}.example-card{--reveal:1!important}.chapter-port,.cinema-shell{box-shadow:none!important}}
+
+/* Clear gutter out of each scene, then the existing downstream spine. */
+.route-svg .route-exit{stroke-width:1;stroke-opacity:.24;stroke-linecap:round}
+.route-svg .continuation-signal{stroke-width:2.5}
+
+/* Keep the motion control on one line, inside the text area and clear of the feeds. */
+.examples-head{flex-wrap:wrap}.examples-head>div{flex:1 1 240px;max-width:100%}.examples-head #motion-toggle{flex:0 0 auto;max-width:none;width:max-content;white-space:nowrap}
