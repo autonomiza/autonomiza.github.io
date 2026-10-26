@@ -3,7 +3,7 @@
   if (document.getElementById('autonomiza-contact')) return;
   const ENDPOINT = 'https://n8n.autonomiza.es/webhook/contacto-web-5r5ypdyed6rx';
   const WHATSAPP = 'https://wa.me/34745041754?text=Hola%20Iv%C3%A1n%2C%20quiero%20contarte%20algo%20de%20mi%20negocio';
-  const PRIVACY = '/politica-de-privacidad.html#chat-web';
+  const PRIVACY = '/politica-de-privacidad#chat-web';
   const LIVE = ['https://autonomiza.es', 'https://www.autonomiza.es'].includes(location.origin);
   const BUSINESSES = {clinica:'Clínica o consulta', comercio:'Comercio o almacén', taller:'Taller, obra o fábrica', oficina:'Oficina, despacho u otro'};
   const CHANNELS = {whatsapp:'WhatsApp', correo:'Correo', videollamada:'Videollamada de 20 min'};
