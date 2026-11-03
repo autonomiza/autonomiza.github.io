@@ -81,7 +81,21 @@ controllers.forEach(c=>{c.buttons.forEach((b,j)=>{b.addEventListener('click',()=
 document.querySelector('#motion-toggle').addEventListener('click',()=>{paused=!paused;setPause();});
 function visibility(){let best=0;active=-1;controllers.forEach(c=>{const r=c.section.getBoundingClientRect(),area=Math.max(0,Math.min(innerHeight,r.bottom)-Math.max(80,r.top));if(area>best){best=area;active=c.i;}wireGeometry(c);});controllers.forEach(c=>c.section.classList.toggle('cinema-active',c.i===active));}
 addEventListener('scroll',visibility,{passive:true});addEventListener('resize',()=>controllers.forEach(c=>{c.key='';if(c.transfer)geometry(c);else render(c);visibility();}),{passive:true});document.fonts.ready.then(()=>{controllers.forEach(c=>{c.key='';if(c.transfer)geometry(c);else render(c);});visibility();});visibility();
-const sky=document.createElement('div');sky.className='ambient-twinkles';sky.setAttribute('aria-hidden','true');[[8,22],[91,16],[58,78],[24,65],[82,47]].forEach(([x,y],i)=>{const e=document.createElement('i');e.style.cssText=`left:${x}%;top:${y}%;animation-delay:-${i*3}s`;sky.append(e);});document.body.prepend(sky);
+const sky=document.createElement('div');sky.className='ambient-twinkles';sky.setAttribute('aria-hidden','true');
+const starAnchors=[[8,22],[91,16],[58,78],[24,65],[82,47]];
+starAnchors.forEach((_,i)=>{const e=document.createElement('i');e.style.animationDelay=`-${i*3}s`;sky.append(e);});document.body.prepend(sky);
+function alignStars(){
+ // Share the fixed background's tile size, dot centre and mobile right alignment.
+ const style=getComputedStyle(document.body),step=parseFloat(style.getPropertyValue('--dot-step')),
+ x0=parseFloat(style.getPropertyValue('--dot-x'))+(document.documentElement.clientWidth-step)*parseFloat(style.getPropertyValue('--dot-align')),
+ y0=parseFloat(style.getPropertyValue('--dot-y'));
+ [...sky.children].forEach((e,i)=>{const [x,y]=starAnchors[i];
+  e.style.left=`${x0+Math.round((sky.clientWidth*x/100-x0)/step)*step}px`;
+  e.style.top=`${y0+Math.round((sky.clientHeight*y/100-y0)/step)*step}px`;
+ });
+}
+alignStars();addEventListener('resize',alignStars,{passive:true});
+if(window.visualViewport)visualViewport.addEventListener('resize',alignStars,{passive:true});
 function tick(now){const delta=Math.min(.06,(now-last)/1000||0);last=now;if(!document.hidden&&!paused&&!reduced.matches){ambient+=delta;journeyFrame(delta);downstreamFrame(delta);}requestAnimationFrame(tick);}requestAnimationFrame(tick);reduced.addEventListener('change',()=>{controllers.forEach(c=>{c.transfer=null;c.delivery=null;c.continuations.forEach(p=>p.path.remove());c.continuations=[];c.started=true;c.key='';render(c);});cards.forEach(c=>c.style.setProperty('--reveal',reduced.matches?'1':'0'));});
 
 const NS='http://www.w3.org/2000/svg',svg=document.createElementNS(NS,'svg');svg.classList.add('route-svg');svg.setAttribute('aria-hidden','true');root.prepend(svg);
