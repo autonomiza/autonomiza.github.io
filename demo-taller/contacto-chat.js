@@ -21,11 +21,11 @@
   function link(text,href,cls='ac-link',external=false){const n=el('a',cls,text);n.href=href;if(external){n.target='_blank';n.rel='noopener noreferrer';}return n;}
   function avatar(){const frame=el('span','ac-face'),n=el('img','ac-avatar');n.src='/demo-taller/simbolo.svg';n.alt='';n.width=32;n.height=32;frame.append(n);return frame;}
   const root=el('div');root.id='autonomiza-contact';
-  const launcher=button('',openChat,'ac-launcher');launcher.append(avatar(),el('span','ac-launch-label','Hablar con el taller'));
-  launcher.setAttribute('aria-label','Hablar con el taller');launcher.setAttribute('aria-haspopup','dialog');launcher.setAttribute('aria-controls','ac-dialog');launcher.setAttribute('aria-expanded','false');
+  const launcher=button('',openChat,'ac-launcher');launcher.append(avatar(),el('span','ac-launch-label','Probar chat ficticio'));
+  launcher.setAttribute('aria-label','Probar chat ficticio');launcher.setAttribute('aria-haspopup','dialog');launcher.setAttribute('aria-controls','ac-dialog');launcher.setAttribute('aria-expanded','false');
   const outside=el('div','ac-launch-area');outside.id='autonomiza-chat-launch';outside.append(launcher);
   const dialog=el('dialog','ac-dialog');dialog.id='ac-dialog';dialog.setAttribute('aria-labelledby','ac-title');
-  const top=el('div','ac-top'),identity=el('div','ac-identity'),title=el('h2','','Asistente · Taller Demo');title.id='ac-title';
+  const top=el('div','ac-top'),identity=el('div','ac-identity'),title=el('h2','','Asistente · Taller Demo (demo de Autonomiza)');title.id='ac-title';
   identity.append(avatar(),title);
   const close=button('×',()=>dialog.close(),'ac-close');close.setAttribute('aria-label','Cerrar chat');top.append(identity,close);
   const form=el('form','ac-form');form.noValidate=true;form.autocomplete='off';
@@ -41,7 +41,7 @@
   const live=el('div','ac-sr');live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');
   form.append(trap,scroll,composer,error);
   const footer=el('div','ac-footer');footer.append(el('p','ac-whatsapp','Prefiero llamar: 947 00 00 00 · Número ficticio, no llames.'),link('¿Quieres esto en tu negocio? Habla con Iván',EXIT,'td-chat-exit'));
-  const notice=el('div','td-chat-notice');notice.append(document.createTextNode('Ejemplo ficticio de Autonomiza: este taller no existe. Lo que escribas lo recibe Autonomiza para enseñarte cómo funciona. '),link('Autonomiza','/')); 
+  const notice=el('div','td-chat-notice');notice.append(document.createTextNode('DEMO DE AUTONOMIZA: este taller no existe. Usa solo datos inventados. Tu mensaje llega a Autonomiza. '),link('Autonomiza','/')); 
   dialog.append(top,notice,form,footer,live);root.append(dialog);document.body.append(root);
   document.body.append(outside);
   const triggers=[launcher];
@@ -73,7 +73,7 @@
   function edit(i){if(submitted||busy)return;saveDraft();step=i;answer.acepta=false;render();}
   function history(){
     transcript.replaceChildren();
-    if(greeted)bubble('Hola 👋 Soy el asistente de Taller Demo. Dime qué necesitas y te contesto al momento.','ac-greeting');
+    if(greeted)bubble('Hola 👋 Soy el asistente de Taller Demo (demo de Autonomiza). Dime qué necesitas y te contesto al momento.','ac-greeting');
     const previous=values();
     for(let i=0;i<step;i++){
       bubble(question(i));
@@ -114,7 +114,7 @@
     check.addEventListener('change',()=>{answer.acepta=check.checked;error.textContent='';});
     const text=el('span');text.append(document.createTextNode('He leído el '),link('aviso de privacidad',PRIVACY,'ac-link',true),document.createTextNode(' y acepto que se usen estos datos para responder a mi consulta.'));
     consent.append(check,text);
-    const info=el('p','ac-privacy','Responsable: Iván Rodríguez Ruiz (Autonomiza). Usa datos inventados. Si pones tu correo real, te llegará la confirmación de prueba. El mensaje se envía a Gemini de Google para responderlo.');
+    const info=el('p','ac-privacy','Responsable: Iván Rodríguez Ruiz (Autonomiza). Usa solo datos inventados. Si introduces un correo real, podría recibir una confirmación de prueba. El mensaje se envía a Gemini de Google para responderlo.');
     next.textContent='Sí, envíalo';next.className='ac-button';next.setAttribute('aria-label','Sí, envíalo');confirm.append(consent,info,next);answer.acepta=false;composer.hidden=true;
   }
   function summary(){const contact=answer.canal==='correo'?answer.correo:answer.telefono;return `Perfecto, ${answer.nombre}. Te contestamos por ${CHANNELS[answer.canal]} a ${contact}. ¿Lo envío?`;}
@@ -131,7 +131,7 @@
       if(step===4)inputField(answer.canal!=='correo'?'telefono':'correo','input',answer.canal!=='correo'?'tel':'email',answer.canal!=='correo'?6:1,answer.canal!=='correo'?25:120,answer.canal!=='correo'?'+34 600 000 000':'nombre@ejemplo.com',answer.canal!=='correo'?'tel':'email');
       if(step===5)privacy();focusQuestion();if(serverError){error.textContent=serverError;serverError='';}
     });}
-    if(!greeted)later('Hola 👋 Soy el asistente de Taller Demo. Dime qué necesitas y te contesto al momento.',()=>{greeted=true;ask();},'ac-greeting');else ask();
+    if(!greeted)later('Hola 👋 Soy el asistente de Taller Demo (demo de Autonomiza). Dime qué necesitas y te contesto al momento.',()=>{greeted=true;ask();},'ac-greeting');else ask();
   }
   function invalid(message) {
     error.textContent=message;const input=form.querySelector('[data-field]');if(input){input.setAttribute('aria-invalid','true');input.focus();}
